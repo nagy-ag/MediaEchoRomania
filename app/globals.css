@@ -1,26 +1,294 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS — MediaEcho Romania
+   Monochrome + Accent color system, 4px base grid
+   ═══════════════════════════════════════════════════════════════ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-body: system-ui, sans-serif;
+  --font-display: system-ui, sans-serif;
+
+  /* ── Spacing (4px base grid, aligned to cheat sheet) ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --space-9: 56px;
+  --space-10: 64px;
+
+  /* ── Radius ── */
+  --radius-xs: 12px;
+  --radius-sm: 16px;
+  --radius-md: 20px;
+  --radius-lg: 24px;
+  --radius-xl: 28px;
+
+  /* ── Motion ── */
+  --motion-fast: 160ms;
+  --motion-base: 220ms;
+  --motion-slow: 420ms;
+  --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Shadows ── */
+  --shadow-shell: 0 1px 3px rgba(0, 0, 0, 0.08), 0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.14);
+  --shadow-pill: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  /* ── Sidebar ── */
+  --sidebar-expanded: 260px;
+  --sidebar-collapsed: 72px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ═══════════════════════════════════════════════════════════════
+   DARK THEME — Near-black monochrome, lime-green accent
+   ═══════════════════════════════════════════════════════════════ */
+html[data-theme="dark"] {
+  --scroll-fade-solid: rgba(20, 20, 20, 0.96);
+  --scroll-fade-transparent: rgba(20, 20, 20, 0);
+  --scroll-edge-shadow: rgba(0, 0, 0, 0.22);
+  --app-bg: #0a0a0a;
+  --shell-top-bg: rgba(14, 14, 14, 0.96);
+  --panel-bg: #141414;
+  --panel-raised: #1a1a1a;
+  --panel-subtle: #1e1e1e;
+  --track-bg: #252525;
+  --text-primary: #f4f4f2;
+  --text-muted: #9a9a95;
+  --text-subtle: #666662;
+  --border-soft: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(200, 245, 66, 0.30);
+  --accent: #c8f542;
+  --accent-strong: #e2ff8a;
+  --accent-surface: rgba(200, 245, 66, 0.14);
+  --accent-contrast: #0d1304;
+  --success: #c8f542;
+  --warning: #f6c453;
+  --danger: #f56753;
+  --toggle-warm: #ffce54;
+  --toggle-warm-strong: #f6bb42;
+  --toggle-warm-shadow: rgba(246, 187, 66, 0.36);
+
+  --shadow-shell: 0 1px 3px rgba(0, 0, 0, 0.2), 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.14), 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.18), 0 12px 32px rgba(0, 0, 0, 0.3);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT THEME — Warm off-white, contrast-compensated green
+   ═══════════════════════════════════════════════════════════════ */
+html[data-theme="light"] {
+  --scroll-fade-solid: rgba(255, 255, 255, 0.98);
+  --scroll-fade-transparent: rgba(255, 255, 255, 0);
+  --scroll-edge-shadow: rgba(24, 24, 22, 0.05);
+  --app-bg: #f2f2ef;
+  --shell-top-bg: rgba(245, 245, 242, 0.96);
+  --panel-bg: #ffffff;
+  --panel-raised: #ffffff;
+  --panel-subtle: #f5f5f2;
+  --track-bg: #e5e5e0;
+  --text-primary: #181816;
+  --text-muted: #6b6b64;
+  --text-subtle: #8b8b83;
+  --border-soft: rgba(24, 24, 22, 0.08);
+  --border-strong: rgba(123, 168, 42, 0.30);
+  --accent: #9cc43a;
+  --accent-strong: #7ba82a;
+  --accent-surface: rgba(156, 196, 58, 0.14);
+  --accent-contrast: #142005;
+  --success: #7ba82a;
+  --warning: #d4a128;
+  --danger: #d4543e;
+  --toggle-warm: #f6bb42;
+  --toggle-warm-strong: #d98a17;
+  --toggle-warm-shadow: rgba(217, 138, 23, 0.28);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════════════════ */
+html,
+body {
+  min-height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--app-bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ── Global interactive transitions ── */
+a,
+button,
+input {
+  transition:
+    transform var(--motion-base) var(--ease-fluid),
+    background-color var(--motion-base) var(--ease-fluid),
+    border-color var(--motion-base) var(--ease-fluid),
+    color var(--motion-base) var(--ease-fluid),
+    opacity var(--motion-base) var(--ease-fluid),
+    box-shadow var(--motion-base) var(--ease-fluid);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATION KEYFRAMES
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Card entrance — staggered fade-in from below */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale entrance for rings, badges */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* SVG ring stroke draw */
+@keyframes drawRing {
+  from {
+    stroke-dashoffset: var(--ring-circumference, 264);
+  }
+  to {
+    stroke-dashoffset: var(--ring-offset, 0);
+  }
+}
+
+/* Live status pulse */
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* Sidebar item reveal */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Bar chart grow */
+@keyframes growHeight {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ── Reduced motion: disable all custom animations ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR — Minimal, transparent
+   ═══════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--track-bg);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-subtle);
+}
+
+.scroll-shadow-top {
+  background:
+    linear-gradient(to bottom, var(--scroll-edge-shadow), transparent 38%),
+    linear-gradient(to bottom, var(--scroll-fade-solid), var(--scroll-fade-transparent));
+}
+
+.scroll-shadow-bottom {
+  background:
+    linear-gradient(to top, var(--scroll-edge-shadow), transparent 38%),
+    linear-gradient(to top, var(--scroll-fade-solid), var(--scroll-fade-transparent));
+}
+
+
+
+
+
+
+@supports (view-transition-name: root) {
+  :root {
+    --theme-transition-x: 50vw;
+    --theme-transition-y: 50vh;
+    --theme-transition-radius: 150vmax;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(root) {
+    z-index: 1;
+  }
+
+  ::view-transition-new(root) {
+    z-index: 2;
+    transform-origin: var(--theme-transition-x) var(--theme-transition-y);
+  }
 }

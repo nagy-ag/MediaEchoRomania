@@ -8,13 +8,17 @@
  * @module
  */
 
+import type * as mediaData from "../mediaData.js";
+
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
 } from "convex/server";
 
-declare const fullApi: ApiFromModules<{}>;
+declare const fullApi: ApiFromModules<{
+  mediaData: typeof mediaData;
+}>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.
