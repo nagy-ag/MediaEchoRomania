@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
   createContext,
@@ -9,7 +9,17 @@ import {
   type ReactNode,
 } from "react";
 import { dictionaries, type DictionaryKey } from "@/config/dictionaries";
-import { defaultLocale, defaultTheme, defaultTimeWindow, supportedLocales, supportedThemes, supportedTimeWindows } from "@/config/ui";
+import {
+  defaultLocale,
+  defaultSidebarState,
+  defaultTheme,
+  defaultTimeWindow,
+  preferenceStorageKeys,
+  supportedLocales,
+  supportedSidebarStates,
+  supportedThemes,
+  supportedTimeWindows,
+} from "@/config/ui";
 import type { AppLocale, SidebarState, ThemeMode, TimeWindow } from "@/lib/contracts/ui";
 
 interface UiPreferencesContextValue {
@@ -24,55 +34,86 @@ interface UiPreferencesContextValue {
   t: (key: DictionaryKey) => string;
 }
 
+interface UiPreferencesProviderProps {
+  children: ReactNode;
+  initialLocale?: AppLocale;
+  initialTheme?: ThemeMode;
+  initialTimeWindow?: TimeWindow;
+  initialSidebarState?: SidebarState;
+}
+
 const UiPreferencesContext = createContext<UiPreferencesContextValue | null>(null);
-const sidebarStates: SidebarState[] = ["expanded", "collapsed"];
 
-const storageKeys = {
-  locale: "mediaecho-locale",
-  theme: "mediaecho-theme",
-  timeWindow: "mediaecho-time-window",
-  sidebarState: "mediaecho-sidebar-state",
-} as const;
-
-function readStoredValue<T extends string>(key: string, allowed: readonly T[], fallback: T): T {
+function readInitialValue<T extends string>(key: string, allowed: readonly T[], fallback: T, documentValue?: string) {
   if (typeof window === "undefined") {
     return fallback;
   }
 
-  const raw = window.localStorage.getItem(key);
-  return allowed.includes(raw as T) ? (raw as T) : fallback;
+  if (documentValue && allowed.includes(documentValue as T)) {
+    return documentValue as T;
+  }
+
+  const stored = window.localStorage.getItem(key);
+  return allowed.includes(stored as T) ? (stored as T) : fallback;
 }
 
-export function UiPreferencesProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocale] = useState<AppLocale>(defaultLocale);
-  const [theme, setTheme] = useState<ThemeMode>(defaultTheme);
-  const [timeWindow, setTimeWindow] = useState<TimeWindow>(defaultTimeWindow);
-  const [sidebarState, setSidebarState] = useState<SidebarState>("expanded");
+function writePreference(key: string, value: string) {
+  window.localStorage.setItem(key, value);
+  document.cookie = `${key}=${value}; path=/; max-age=31536000; samesite=lax`;
+}
 
-  useEffect(() => {
-    setLocale(readStoredValue(storageKeys.locale, supportedLocales, defaultLocale));
-    setTheme(readStoredValue(storageKeys.theme, supportedThemes, defaultTheme));
-    setTimeWindow(readStoredValue(storageKeys.timeWindow, supportedTimeWindows, defaultTimeWindow));
-    setSidebarState(readStoredValue(storageKeys.sidebarState, sidebarStates, "expanded"));
-  }, []);
+export function UiPreferencesProvider({
+  children,
+  initialLocale = defaultLocale,
+  initialTheme = defaultTheme,
+  initialTimeWindow = defaultTimeWindow,
+  initialSidebarState = defaultSidebarState,
+}: UiPreferencesProviderProps) {
+  const [locale, setLocale] = useState<AppLocale>(() =>
+    readInitialValue(
+      preferenceStorageKeys.locale,
+      supportedLocales,
+      initialLocale,
+      typeof document !== "undefined" ? document.documentElement.lang : undefined,
+    ),
+  );
+  const [theme, setTheme] = useState<ThemeMode>(() =>
+    readInitialValue(
+      preferenceStorageKeys.theme,
+      supportedThemes,
+      initialTheme,
+      typeof document !== "undefined" ? document.documentElement.dataset.theme : undefined,
+    ),
+  );
+  const [timeWindow, setTimeWindow] = useState<TimeWindow>(() =>
+    readInitialValue(preferenceStorageKeys.timeWindow, supportedTimeWindows, initialTimeWindow),
+  );
+  const [sidebarState, setSidebarState] = useState<SidebarState>(() =>
+    readInitialValue(
+      preferenceStorageKeys.sidebarState,
+      supportedSidebarStates,
+      initialSidebarState,
+      typeof document !== "undefined" ? document.documentElement.dataset.sidebar : undefined,
+    ),
+  );
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    window.localStorage.setItem(storageKeys.locale, locale);
+    writePreference(preferenceStorageKeys.locale, locale);
   }, [locale]);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    window.localStorage.setItem(storageKeys.theme, theme);
+    writePreference(preferenceStorageKeys.theme, theme);
   }, [theme]);
 
   useEffect(() => {
-    window.localStorage.setItem(storageKeys.timeWindow, timeWindow);
+    writePreference(preferenceStorageKeys.timeWindow, timeWindow);
   }, [timeWindow]);
 
   useEffect(() => {
     document.documentElement.dataset.sidebar = sidebarState;
-    window.localStorage.setItem(storageKeys.sidebarState, sidebarState);
+    writePreference(preferenceStorageKeys.sidebarState, sidebarState);
   }, [sidebarState]);
 
   const value = useMemo<UiPreferencesContextValue>(() => ({

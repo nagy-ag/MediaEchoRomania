@@ -1,10 +1,12 @@
-import { v } from "convex/values";
+﻿import { v } from "convex/values";
 import type { QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
 import type {
   AuditCardPayload,
+  AuditLibraryItem,
   ComparisonMetric,
   ComparisonRow,
+  CoverageGapsOverview,
   DashboardOverview,
   EventClusterDetail,
   EventClusterSummary,
@@ -12,8 +14,11 @@ import type {
   OutletSummary,
   PipelineOverview,
   PipelineStatusOverview,
+  SearchCatalogEntry,
+  TypologyDivideOverview,
 } from "../lib/contracts/media-echo";
 import type { AppLocale } from "../lib/contracts/ui";
+import { getMockDashboardOverview } from "../data/seed/mock-data";
 import { mockDataset } from "../data/seed/mock-dataset";
 import { buildSeededMockPayloads } from "../lib/seed/materialized-views";
 
@@ -84,9 +89,7 @@ export const getSeedStatus = query({
   args: {},
   handler: async (ctx) => {
     const documents = await ctx.db.query("mockPayloads").collect();
-    const latestUpdate = documents
-      .map((document) => document.updatedAt)
-      .sort((left, right) => right.localeCompare(left))[0] ?? null;
+    const latestUpdate = documents.map((document) => document.updatedAt).sort((left, right) => right.localeCompare(left))[0] ?? null;
 
     return {
       isSeeded: documents.length > 0,
@@ -105,7 +108,10 @@ export const getDashboardOverview = query({
   },
   handler: async (ctx, args) => {
     const dashboards = await getStoredPayload<Record<AppLocale, DashboardOverview>>(ctx, `view:dashboard:${args.window}`);
-    return dashboards?.[args.locale] ?? null;
+    const fallback = getMockDashboardOverview(args.window, args.locale);
+    const stored = dashboards?.[args.locale];
+
+    return stored ? { ...fallback, ...stored } : fallback;
   },
 });
 
@@ -163,6 +169,42 @@ export const getComparisonRows = query({
   },
 });
 
+export const getCoverageGapsOverview = query({
+  args: {
+    window: timeWindowValidator,
+  },
+  handler: async (ctx, args) => {
+    return await getStoredPayload<CoverageGapsOverview>(ctx, `view:coverageGaps:${args.window}`);
+  },
+});
+
+export const getTypologyDivideOverview = query({
+  args: {
+    window: timeWindowValidator,
+  },
+  handler: async (ctx, args) => {
+    return await getStoredPayload<TypologyDivideOverview>(ctx, `view:typologyDivide:${args.window}`);
+  },
+});
+
+export const getSearchCatalog = query({
+  args: {
+    window: timeWindowValidator,
+  },
+  handler: async (ctx, args) => {
+    return (await getStoredPayload<SearchCatalogEntry[]>(ctx, `view:searchCatalog:${args.window}`)) ?? [];
+  },
+});
+
+export const listAuditLibrary = query({
+  args: {
+    window: timeWindowValidator,
+  },
+  handler: async (ctx, args) => {
+    return (await getStoredPayload<AuditLibraryItem[]>(ctx, `view:auditLibrary:${args.window}`)) ?? [];
+  },
+});
+
 export const listOutlets = query({
   args: {},
   handler: async (ctx) => {
@@ -200,4 +242,3 @@ export const getAuditCard = query({
     return auditCards?.[args.cardId] ?? null;
   },
 });
-

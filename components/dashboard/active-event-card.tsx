@@ -1,3 +1,4 @@
+﻿import Link from "next/link";
 import type { EventClusterSummary } from "@/lib/contracts/media-echo";
 import { ShellCard } from "@/components/dashboard/shell-card";
 import { CardHeader, CardBadge, LiveDot } from "@/components/dashboard/card-header";
@@ -33,31 +34,22 @@ export function ActiveEventCard({ event, trackLabel, staggerIndex }: ActiveEvent
           <span className="text-lg font-bold text-[var(--accent)]">{event.activeOutlets}</span>
         </div>
         <div>
-          <p className="text-sm font-medium text-[var(--text-primary)]">
-            {event.articleCount} articles tracked
-          </p>
-          <p className="text-xs text-[var(--text-muted)]">
-            {event.activeOutlets} outlets · {event.typology}
-          </p>
+          <p className="text-sm font-medium text-[var(--text-primary)]">{event.articleCount} articles tracked</p>
+          <p className="text-xs text-[var(--text-muted)]">{event.activeOutlets} outlets · {event.typology}</p>
         </div>
       </div>
 
       <p className="mt-3 text-sm leading-6 text-[var(--text-muted)]">{event.summary}</p>
 
       <div className="mt-4">
-        <button
-          type="button"
-          className="rounded-[var(--radius-sm)] border border-[var(--border-soft)] bg-[var(--panel-subtle)] px-4 py-2 text-xs font-semibold text-[var(--text-primary)] transition hover:border-[var(--border-strong)] hover:text-[var(--accent)]"
+        <Link
+          href={`/events/${event.id}`}
+          className="inline-flex rounded-[var(--radius-sm)] border border-[var(--border-soft)] bg-[var(--panel-subtle)] px-4 py-2 text-xs font-semibold text-[var(--text-primary)] transition hover:border-[var(--border-strong)] hover:text-[var(--accent)]"
         >
           {trackLabel}
-        </button>
+        </Link>
       </div>
     </ShellCard>
   );
 }
-
-
-
-
-
 

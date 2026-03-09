@@ -1,7 +1,9 @@
-import type {
+﻿import type {
   AuditCardPayload,
+  AuditLibraryItem,
   ComparisonMetric,
   ComparisonRow,
+  CoverageGapsOverview,
   DashboardOverview,
   EventClusterDetail,
   EventClusterSummary,
@@ -9,16 +11,22 @@ import type {
   OutletSummary,
   PipelineOverview,
   PipelineStatusOverview,
+  SearchCatalogEntry,
+  TypologyDivideOverview,
 } from "@/lib/contracts/media-echo";
 import type { AppLocale, TimeWindow } from "@/lib/contracts/ui";
 import {
+  getMockAuditLibrary,
   getMockComparisonRows,
+  getMockCoverageGapsOverview,
   getMockDashboardOverview,
   getMockEvent,
   getMockEvents,
   getMockOutletProfile,
   getMockPipelineOverview,
   getMockPipelineStatus,
+  getMockSearchCatalog,
+  getMockTypologyDivideOverview,
   listMockOutlets,
   mockComparisonMetrics,
 } from "@/data/seed/mock-data";
@@ -128,9 +136,7 @@ function buildOutletProfileMap(window: TimeWindow, outlets: OutletSummary[]): Ou
 }
 
 function buildLocalizedDashboards(window: TimeWindow): LocalizedDashboardPayload {
-  return Object.fromEntries(
-    locales.map((locale) => [locale, getMockDashboardOverview(window, locale)]),
-  ) as LocalizedDashboardPayload;
+  return Object.fromEntries(locales.map((locale) => [locale, getMockDashboardOverview(window, locale)])) as LocalizedDashboardPayload;
 }
 
 function buildViewPayloads(): SeededMockPayload[] {
@@ -149,6 +155,10 @@ function buildViewPayloads(): SeededMockPayload[] {
     const comparisonRows = getMockComparisonRows(window);
     const eventDetails = buildEventDetailMap(window, events);
     const outletProfiles = buildOutletProfileMap(window, outlets);
+    const coverageGaps = getMockCoverageGapsOverview(window);
+    const typologyDivide = getMockTypologyDivideOverview(window);
+    const searchCatalog = getMockSearchCatalog(window);
+    const auditLibrary = getMockAuditLibrary(window);
 
     payloads.push(
       { key: `view:dashboard:${window}`, payload: dashboardPayload satisfies LocalizedDashboardPayload },
@@ -158,6 +168,10 @@ function buildViewPayloads(): SeededMockPayload[] {
       { key: `view:eventDetails:${window}`, payload: eventDetails },
       { key: `view:comparisonRows:${window}`, payload: comparisonRows satisfies ComparisonRow[] },
       { key: `view:outletProfiles:${window}`, payload: outletProfiles },
+      { key: `view:coverageGaps:${window}`, payload: coverageGaps satisfies CoverageGapsOverview },
+      { key: `view:typologyDivide:${window}`, payload: typologyDivide satisfies TypologyDivideOverview },
+      { key: `view:searchCatalog:${window}`, payload: searchCatalog satisfies SearchCatalogEntry[] },
+      { key: `view:auditLibrary:${window}`, payload: auditLibrary satisfies AuditLibraryItem[] },
     );
   }
 
@@ -167,5 +181,3 @@ function buildViewPayloads(): SeededMockPayload[] {
 export function buildSeededMockPayloads(): SeededMockPayload[] {
   return [...buildRawSourcePayloads(mockDataset), ...buildViewPayloads()];
 }
-
-

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { ComponentType, ReactNode } from "react";
 import Image from "next/image";
@@ -12,10 +12,13 @@ import { LocaleMenu } from "@/components/dashboard/locale-menu";
 import { SidebarStatusCard } from "@/components/dashboard/sidebar-status-card";
 import { useUiPreferences } from "@/features/shell/ui-preferences";
 import {
+  ActivityIcon,
+  AuditIcon,
   BookOpenIcon,
   CompareIcon,
   EventsIcon,
   GridIcon,
+  MapPinIcon,
   OutletsIcon,
   SearchIcon,
   SidebarClosedIcon,
@@ -25,12 +28,18 @@ import {
 import { cn } from "@/lib/utils";
 
 const mainNavItems = [
-  { href: "/", key: "nav.dashboard" as const, icon: GridIcon },
-  { href: "/events", key: "nav.events" as const, icon: EventsIcon },
-  { href: "/compare", key: "nav.compare" as const, icon: CompareIcon },
+  { href: "/", key: "nav.briefing" as const, icon: GridIcon },
+  { href: "/events", key: "nav.universe" as const, icon: EventsIcon },
+  { href: "/coverage-gaps", key: "nav.coverageGaps" as const, icon: ActivityIcon },
+  { href: "/national-vs-local", key: "nav.typology" as const, icon: MapPinIcon },
+  { href: "/compare", key: "nav.compareOutlets" as const, icon: CompareIcon },
 ];
 
-const analyticsNavItems = [{ href: "/profiles", key: "nav.profiles" as const, icon: OutletsIcon }];
+const analyticsNavItems = [
+  { href: "/profiles", key: "nav.profiles" as const, icon: OutletsIcon },
+  { href: "/search", key: "nav.search" as const, icon: SearchIcon },
+  { href: "/saved-audits", key: "nav.savedAudits" as const, icon: AuditIcon },
+];
 const resourceNavItems = [{ href: "/docs", key: "nav.docs" as const, icon: BookOpenIcon }];
 
 export function DashboardShell({ children }: { children: ReactNode }) {
@@ -176,10 +185,10 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                 </span>
               </div>
 
-              <label className="mx-auto flex h-9 w-full items-center gap-2.5 rounded-[var(--radius-md)] border border-[var(--border-soft)] bg-[var(--panel-subtle)] px-3 text-[var(--text-subtle)] md:max-w-[38rem]">
+              <Link href="/search" className="mx-auto flex h-9 w-full items-center gap-2.5 rounded-[var(--radius-md)] border border-[var(--border-soft)] bg-[var(--panel-subtle)] px-3 text-[var(--text-subtle)] md:max-w-[38rem]">
                 <SearchIcon size={15} className="shrink-0" />
                 <span className="truncate text-xs">{t("controls.search")}</span>
-              </label>
+              </Link>
 
               <div className="flex items-center justify-end gap-1.5">
                 <SegmentedControl
@@ -261,6 +270,10 @@ function SegmentedControl({
     </div>
   );
 }
+
+
+
+
 
 
 

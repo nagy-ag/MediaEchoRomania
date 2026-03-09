@@ -1,11 +1,13 @@
-"use client";
+﻿"use client";
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type {
   AuditCardPayload,
+  AuditLibraryItem,
   ComparisonMetric,
   ComparisonRow,
+  CoverageGapsOverview,
   DashboardOverview,
   EventClusterDetail,
   EventClusterSummary,
@@ -13,6 +15,8 @@ import type {
   OutletSummary,
   PipelineOverview,
   PipelineStatusOverview,
+  SearchCatalogEntry,
+  TypologyDivideOverview,
 } from "@/lib/contracts/media-echo";
 import type { AppLocale, TimeWindow } from "@/lib/contracts/ui";
 
@@ -44,6 +48,22 @@ export function useComparisonRows(window: TimeWindow): ComparisonRow[] | undefin
   return useQuery(api.mediaData.getComparisonRows, { window });
 }
 
+export function useCoverageGapsOverview(window: TimeWindow): CoverageGapsOverview | null | undefined {
+  return useQuery(api.mediaData.getCoverageGapsOverview, { window });
+}
+
+export function useTypologyDivideOverview(window: TimeWindow): TypologyDivideOverview | null | undefined {
+  return useQuery(api.mediaData.getTypologyDivideOverview, { window });
+}
+
+export function useSearchCatalog(window: TimeWindow): SearchCatalogEntry[] | undefined {
+  return useQuery(api.mediaData.getSearchCatalog, { window });
+}
+
+export function useAuditLibrary(window: TimeWindow): AuditLibraryItem[] | undefined {
+  return useQuery(api.mediaData.listAuditLibrary, { window });
+}
+
 export function useOutlets(): OutletSummary[] | undefined {
   return useQuery(api.mediaData.listOutlets, {});
 }
@@ -59,4 +79,7 @@ export function useOutletProfile(outletId: string, window: TimeWindow): OutletPr
 export function useAuditCard(cardId: string): AuditCardPayload | null | undefined {
   return useQuery(api.mediaData.getAuditCard, { cardId });
 }
+
+
+
 

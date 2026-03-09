@@ -1,4 +1,4 @@
-import type { EventClusterDetail } from "@/lib/contracts/media-echo";
+﻿import type { EventClusterDetail } from "@/lib/contracts/media-echo";
 import type { TimeWindow, EventPhase } from "@/lib/contracts/ui";
 import { mockEventSeeds } from "@/data/seed/event-seeds";
 import { mockOutletSeeds } from "@/data/seed/outlet-seeds";
@@ -80,7 +80,6 @@ const dateRange = Array.from(
 
 function getEventPhase(date: string, event: MockEventSeed): EventPhase {
   const current = toDate(date);
-  const start = toDate(event.startDate);
   const peak = toDate(event.peakDate);
   const end = toDate(event.endDate);
 
@@ -255,14 +254,33 @@ function buildAuditCards(events: MockEventSeed[]) {
   return events.slice(0, 6).map((event, index) => {
     const angle = event.outletAngles[index % event.outletAngles.length];
     const outlet = outletById.get(angle.outletId) ?? mockOutletSeeds[0];
+    const article =
+      articles.find((item) => item.eventId === event.id && item.outletId === outlet.id) ??
+      articles.find((item) => item.eventId === event.id) ??
+      articles[index];
+
     return {
       id: `${event.id}-a${index + 1}`,
+      outletId: outlet.id,
       outletName: outlet.name,
+      eventId: event.id,
       eventTitle: event.title,
+      articleTitle: article?.title ?? event.headlineModes.conflict,
       baselineFact: event.baselineFacts[0],
       biasedQuote: event.headlineModes.conflict,
       finding: `${outlet.name} over-indexed on conflict and underweighted baseline context for ${event.title.toLowerCase()}.`,
       exportCaption: `Audit receipt for ${outlet.name} on ${event.title}`,
+      articleSummary: article?.dek ?? `${outlet.name} pushed the conflict frame ahead of the baseline facts.`,
+      omissionNotes: event.omittedFacts.slice(0, 2),
+      evidence: [
+        { label: "Event phase", value: getEventPhase(mockAnchorDate, event) },
+        { label: "Alignment score", value: `${angle.alignment}%` },
+        { label: "Source discipline", value: outlet.anonymousSourceRatio >= 18 ? "Anonymous-source heavy" : "Document-driven" },
+      ],
+      relatedProfileId: outlet.id,
+      relatedEventId: event.id,
+      publishedAt: `${article?.date ?? event.peakDate}T09:30:00Z`,
+      viralityScore: article?.viralityScore ?? event.baseVirality,
     };
   });
 }
@@ -425,6 +443,23 @@ export function getCurrentEventDetail(eventId: string): EventClusterDetail | nul
       .filter((item) => item.eventId === eventId && item.date >= getWindowStart("96h"))
       .map((item) => item.outletId),
   );
+  const topArticles = mockDataset.articles
+    .filter((item) => item.eventId === eventId)
+    .sort((left, right) => right.viralityScore - left.viralityScore)
+    .slice(0, 4)
+    .map((article) => ({
+      id: article.id,
+      title: article.title,
+      outletId: article.outletId,
+      outletName: outletById.get(article.outletId)?.name ?? article.outletId,
+      eventId: article.eventId,
+      eventTitle: event.title,
+      viralityScore: article.viralityScore,
+      framing: article.framing,
+      publishedAt: `${article.date}T09:30:00Z`,
+      auditCardId: mockDataset.auditCards.find((card) => card.eventId === article.eventId && card.outletId === article.outletId)?.id,
+    }));
+  const relatedAuditCardIds = mockDataset.auditCards.filter((card) => card.eventId === eventId).map((card) => card.id);
 
   return {
     id: event.id,
@@ -442,6 +477,14 @@ export function getCurrentEventDetail(eventId: string): EventClusterDetail | nul
     },
     baselineFacts: event.baselineFacts,
     omittedFacts: event.omittedFacts,
+    phaseSummary:
+      latest?.phase === "spin"
+        ? `${event.title} is now in the spin phase, with outlet-level framing divergence outpacing baseline agreement.`
+        : latest?.phase === "consensus"
+          ? `${event.title} is consolidating around baseline facts, but editorial angles are already separating.`
+          : latest?.phase === "resolved"
+            ? `${event.title} has cooled, making omission patterns and late framing shifts easier to audit.`
+            : `${event.title} is still emerging, with early coverage shaping the baseline narrative.`,
     outletAngles: event.outletAngles.map((angle) => ({
       outlet: outletById.get(angle.outletId)?.name ?? angle.outletId,
       angle: angle.angle,
@@ -455,7 +498,14 @@ export function getCurrentEventDetail(eventId: string): EventClusterDetail | nul
     })),
     nodes: event.nodes,
     edges: event.edges,
+    relatedAuditCardIds,
+    topArticles,
+    comparisonOutletIds: event.outletAngles.slice(0, 3).map((angle) => angle.outletId),
   };
 }
+
+
+
+
 
 
