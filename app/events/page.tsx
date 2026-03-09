@@ -1,5 +1,5 @@
-﻿import { EventsPageView } from "@/features/events/events-page-view";
+import { EventsPage } from "@/features/platform/events-page";
 
-export default function EventsPage() {
-  return <EventsPageView />;
+export default function EventsRoute() {
+  return <EventsPage />;
 }

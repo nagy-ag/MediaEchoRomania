@@ -1,14 +1,17 @@
 {
-  "name": "me-02",
+  "name": "media-echo-romania",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "import:gcam": "node scripts/import-gcam-codebook.mjs",
+    "worker:test": ".\\services\\gdelt-worker\\.venv\\Scripts\\python -m unittest discover services\\gdelt-worker\\tests"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.0.1",
     "convex": "^1.32.0",
     "next": "16.1.6",
     "react": "19.2.3",

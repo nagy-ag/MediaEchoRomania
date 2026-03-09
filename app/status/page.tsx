@@ -1,5 +1,5 @@
-import { StatusPageView } from "@/features/status/status-page-view";
+import { StatusPage } from "@/features/platform/status-page";
 
-export default function StatusPage() {
-  return <StatusPageView />;
+export default function StatusRoute() {
+  return <StatusPage />;
 }

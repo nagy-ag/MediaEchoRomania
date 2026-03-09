@@ -8,7 +8,9 @@
  * @module
  */
 
-import type * as mediaData from "../mediaData.js";
+import type * as analytics from "../analytics.js";
+import type * as gcam from "../gcam.js";
+import type * as userState from "../userState.js";
 
 import type {
   ApiFromModules,
@@ -17,7 +19,9 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  mediaData: typeof mediaData;
+  analytics: typeof analytics;
+  gcam: typeof gcam;
+  userState: typeof userState;
 }>;
 
 /**

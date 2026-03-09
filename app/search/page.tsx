@@ -1,6 +1,5 @@
-﻿import { SearchPageView } from "@/features/search/search-page-view";
+import { SearchPage } from "@/features/platform/search-page";
 
-export default function SearchPage() {
-  return <SearchPageView />;
+export default function SearchRoute() {
+  return <SearchPage />;
 }
-

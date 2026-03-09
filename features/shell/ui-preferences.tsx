@@ -1,15 +1,9 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { dictionaries, type DictionaryKey } from "@/config/dictionaries";
 import {
+  defaultAnalystControlsCollapsed,
   defaultLocale,
   defaultSidebarState,
   defaultTheme,
@@ -20,17 +14,42 @@ import {
   supportedThemes,
   supportedTimeWindows,
 } from "@/config/ui";
-import type { AppLocale, SidebarState, ThemeMode, TimeWindow } from "@/lib/contracts/ui";
+import type {
+  AnalystDensity,
+  AppLocale,
+  OutletScope,
+  SidebarState,
+  ThemeMode,
+  TimeWindow,
+  ToneFilter,
+} from "@/lib/contracts/ui";
+
+interface PlatformFilters {
+  outletScope: OutletScope;
+  region: string;
+  topic: string;
+  entity: string;
+  tone: ToneFilter;
+  frame: string;
+  ghosting: string;
+}
 
 interface UiPreferencesContextValue {
   locale: AppLocale;
   theme: ThemeMode;
   timeWindow: TimeWindow;
   sidebarState: SidebarState;
+  density: AnalystDensity;
+  filters: PlatformFilters;
+  analystControlsCollapsed: boolean;
   setLocale: (locale: AppLocale) => void;
   setTheme: (theme: ThemeMode) => void;
   setTimeWindow: (window: TimeWindow) => void;
+  setDensity: (density: AnalystDensity) => void;
+  setFilter: <K extends keyof PlatformFilters>(key: K, value: PlatformFilters[K]) => void;
+  resetFilters: () => void;
   toggleSidebar: () => void;
+  toggleAnalystControls: () => void;
   t: (key: DictionaryKey) => string;
 }
 
@@ -41,6 +60,16 @@ interface UiPreferencesProviderProps {
   initialTimeWindow?: TimeWindow;
   initialSidebarState?: SidebarState;
 }
+
+const defaultFilters: PlatformFilters = {
+  outletScope: "all",
+  region: "all",
+  topic: "all",
+  entity: "all",
+  tone: "all",
+  frame: "all",
+  ghosting: "all",
+};
 
 const UiPreferencesContext = createContext<UiPreferencesContextValue | null>(null);
 
@@ -55,6 +84,21 @@ function readInitialValue<T extends string>(key: string, allowed: readonly T[], 
 
   const stored = window.localStorage.getItem(key);
   return allowed.includes(stored as T) ? (stored as T) : fallback;
+}
+
+function readBooleanPreference(key: string, fallback: boolean) {
+  if (typeof window === "undefined") {
+    return fallback;
+  }
+
+  const stored = window.localStorage.getItem(key);
+  if (stored === "true") {
+    return true;
+  }
+  if (stored === "false") {
+    return false;
+  }
+  return fallback;
 }
 
 function writePreference(key: string, value: string) {
@@ -96,6 +140,11 @@ export function UiPreferencesProvider({
       typeof document !== "undefined" ? document.documentElement.dataset.sidebar : undefined,
     ),
   );
+  const [density, setDensity] = useState<AnalystDensity>("compact");
+  const [filters, setFilters] = useState<PlatformFilters>(defaultFilters);
+  const [analystControlsCollapsed, setAnalystControlsCollapsed] = useState<boolean>(() =>
+    readBooleanPreference(preferenceStorageKeys.analystControlsCollapsed, defaultAnalystControlsCollapsed),
+  );
 
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -116,17 +165,28 @@ export function UiPreferencesProvider({
     writePreference(preferenceStorageKeys.sidebarState, sidebarState);
   }, [sidebarState]);
 
+  useEffect(() => {
+    writePreference(preferenceStorageKeys.analystControlsCollapsed, String(analystControlsCollapsed));
+  }, [analystControlsCollapsed]);
+
   const value = useMemo<UiPreferencesContextValue>(() => ({
     locale,
     theme,
     timeWindow,
     sidebarState,
+    density,
+    filters,
+    analystControlsCollapsed,
     setLocale,
     setTheme,
     setTimeWindow,
+    setDensity,
+    setFilter: (key, value) => setFilters((current) => ({ ...current, [key]: value })),
+    resetFilters: () => setFilters(defaultFilters),
     toggleSidebar: () => setSidebarState((current) => (current === "expanded" ? "collapsed" : "expanded")),
+    toggleAnalystControls: () => setAnalystControlsCollapsed((current) => !current),
     t: (key) => dictionaries[locale][key],
-  }), [locale, theme, timeWindow, sidebarState]);
+  }), [locale, theme, timeWindow, sidebarState, density, filters, analystControlsCollapsed]);
 
   return <UiPreferencesContext.Provider value={value}>{children}</UiPreferencesContext.Provider>;
 }

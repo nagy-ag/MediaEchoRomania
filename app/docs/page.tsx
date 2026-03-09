@@ -1,5 +1,5 @@
-import { DocsPageView } from "@/features/docs/docs-page-view";
+import { DocsPage } from "@/features/platform/docs-page";
 
-export default function DocsPage() {
-  return <DocsPageView />;
+export default function DocsRoute() {
+  return <DocsPage />;
 }
