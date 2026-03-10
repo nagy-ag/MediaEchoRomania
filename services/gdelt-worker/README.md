@@ -23,6 +23,11 @@ python -m worker.cli masterfile-poller --dry-run
 - `python -m worker.cli backfill-worker --max-months 24`
 - `python -m worker.cli backfill-worker --start-date 2015-01-01 --end-date 2026-03-01`
 
+## Railway note
+
+`services/gdelt-worker/railway.toml` must not contain a shared `startCommand`.
+All worker services use the same root directory, so each worker command must be set in the Railway UI per service.
+
 ## Recommended Railway services
 
 - `gdelt-masterfile-poller`: `python -m worker.cli masterfile-poller`

@@ -25,3 +25,9 @@ node scripts/import-gcam-codebook.mjs --dry-run
 ## Environment
 
 Use `.env.example` as the template for local configuration. The root env file now documents Convex, Clerk, BigQuery, GDELT worker, and Railway settings.
+
+
+
+
+Later to update:
+Get-Content C:\path\to\your-key.json -Raw | ConvertFrom-Json | ConvertTo-Json -Compress

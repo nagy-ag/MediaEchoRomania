@@ -1,7 +1,6 @@
 [build]
 builder = "NIXPACKS"
 
-[deploy]
-startCommand = "python -m worker.cli masterfile-poller"
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 3
+# Do not set a shared startCommand here.
+# Railway detects this file for every service using /services/gdelt-worker as root,
+# so per-service commands must be configured in the Railway UI.
