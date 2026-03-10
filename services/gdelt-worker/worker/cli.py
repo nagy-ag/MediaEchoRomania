@@ -14,7 +14,12 @@ COMMANDS = {
     "rollup-worker": lambda settings, args: rollup_worker.run(settings),
     "brief-generator": lambda settings, args: brief_generator.run(settings),
     "alert-worker": lambda settings, args: alert_worker.run(settings),
-    "backfill-worker": lambda settings, args: backfill_worker.run(settings, start_date=args.start_date, end_date=args.end_date, max_months=args.max_months),
+    "backfill-worker": lambda settings, args: backfill_worker.run(
+        settings,
+        start_date=args.start_date,
+        end_date=args.end_date,
+        max_months=args.max_months,
+    ),
 }
 
 
@@ -45,3 +50,7 @@ def main() -> int:
         warehouse.ensure_warehouse()
         warehouse.record_job_result(result)
     return 0 if result.status == "success" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
