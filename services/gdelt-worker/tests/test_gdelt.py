@@ -25,12 +25,13 @@ class GdeltHelpersTests(unittest.TestCase):
 
     def test_parse_masterfile_skips_malformed_lines(self) -> None:
         entries = parse_masterfile(
-            "20260309083000 123 http://data.gdeltproject.org/gdeltv2/20260309083000.export.CSV.zip\n"
+            "123 297a16b493de7cf6ca809a7cc31d0b93 http://data.gdeltproject.org/gdeltv2/20260309083000.export.CSV.zip\n"
             "150383 http://data.gdeltproject.org/gdeltv2/bad-line.export.CSV.zip\n"
-            "not-a-timestamp 123 http://data.gdeltproject.org/gdeltv2/also-bad.export.CSV.zip"
+            "not-a-size 123 http://data.gdeltproject.org/gdeltv2/also-bad.export.CSV.zip"
         )
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].feed_type, "events")
+        self.assertEqual(entries[0].source_checksum, "297a16b493de7cf6ca809a7cc31d0b93")
 
     def test_parse_feed_batch_filters_mentions_to_allowed_domains(self) -> None:
         row_allowed = [""] * 13

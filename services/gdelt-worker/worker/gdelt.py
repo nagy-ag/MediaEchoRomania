@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import io
+import re
 import zipfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -79,6 +80,13 @@ def parse_date(value: str) -> str:
     return datetime.strptime(value, "%Y%m%d").date().isoformat()
 
 
+def published_at_from_url(url: str) -> datetime | None:
+    match = re.match(r"(?P<timestamp>\d{14})\.", source_file_from_url(url))
+    if not match:
+        return None
+    return parse_timestamp(match.group("timestamp"))
+
+
 def parse_masterfile(text: str) -> list[MasterfileEntry]:
     entries: list[MasterfileEntry] = []
     for raw_line in text.splitlines():
@@ -88,19 +96,38 @@ def parse_masterfile(text: str) -> list[MasterfileEntry]:
         parts = line.split(maxsplit=2)
         if len(parts) != 3:
             continue
-        published, size_bytes, url = parts
-        if len(published) != 14 or not published.isdigit():
-            continue
-        if not size_bytes.isdigit():
-            continue
+
+        first, second, url = parts
         if not url.lower().startswith("http") or not url.lower().endswith(".zip"):
             continue
+
+        # Support both the current GDELT masterfile layout (`size checksum url`)
+        # and the older timestamp-prefixed shape some fixtures still use.
+        if len(first) == 14 and first.isdigit() and second.isdigit():
+            entries.append(
+                MasterfileEntry(
+                    published_at=parse_timestamp(first),
+                    size_bytes=int(second),
+                    url=url,
+                    feed_type=infer_feed_type(url),
+                )
+            )
+            continue
+
+        if not first.isdigit():
+            continue
+
+        published_at = published_at_from_url(url)
+        if not published_at:
+            continue
+
         entries.append(
             MasterfileEntry(
-                published_at=parse_timestamp(published),
-                size_bytes=int(size_bytes),
+                published_at=published_at,
+                size_bytes=int(first),
                 url=url,
                 feed_type=infer_feed_type(url),
+                source_checksum=second,
             )
         )
     return entries

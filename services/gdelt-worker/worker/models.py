@@ -14,6 +14,7 @@ class MasterfileEntry:
     size_bytes: int
     url: str
     feed_type: FeedType
+    source_checksum: str = ""
 
 
 @dataclass(frozen=True)
