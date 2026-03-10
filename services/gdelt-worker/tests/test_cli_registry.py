@@ -14,6 +14,7 @@ class CliRegistryTests(unittest.TestCase):
                 "rollup-worker",
                 "brief-generator",
                 "alert-worker",
+                "backfill-worker",
             },
         )
 

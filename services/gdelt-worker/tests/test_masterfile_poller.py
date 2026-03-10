@@ -1,7 +1,7 @@
 from datetime import timezone
 import unittest
 
-from worker.jobs.masterfile_poller import infer_feed_type, parse_masterfile
+from worker.gdelt import infer_feed_type, parse_masterfile
 
 
 class MasterfilePollerTests(unittest.TestCase):

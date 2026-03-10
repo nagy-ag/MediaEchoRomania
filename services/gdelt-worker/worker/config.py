@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import dataclass
+from pathlib import Path
 
 from worker.models import DatasetNames
 
@@ -18,10 +19,21 @@ class Settings:
     worker_batch_size: int
     poll_lookback_minutes: int
     convex_url: str
+    repair_window_hours: int
+    recent_serving_window_hours: int
+    backfill_start_date: str
+    backfill_end_date: str
+    outlet_registry_table: str
+    outlet_alias_table: str
+    outlet_discovery_table: str
+    event_universe_table: str
+    freshness_table: str
+    backfill_tracker_table: str
+    job_stale_after_minutes: int
+    seed_outlets_path: Path
 
 
-
-def _parse_service_account() -> dict[str, str] | None:
+def parse_service_account() -> dict[str, str] | None:
     raw = os.getenv("GCP_SERVICE_ACCOUNT_JSON", "").strip()
     if not raw:
         return None
@@ -31,9 +43,9 @@ def _parse_service_account() -> dict[str, str] | None:
         return None
 
 
-
 def load_settings() -> Settings:
-    _parse_service_account()
+    seed_path = Path(__file__).resolve().parent / "seeds" / "romanian_outlets.json"
+    parse_service_account()
     return Settings(
         gdelt_masterfile_url=os.getenv("GDELT_MASTERFILE_URL", "http://data.gdeltproject.org/gdeltv2/masterfilelist.txt"),
         gcp_project_id=os.getenv("GCP_PROJECT_ID", "media-echo-romania"),
@@ -50,4 +62,16 @@ def load_settings() -> Settings:
         worker_batch_size=int(os.getenv("WORKER_BATCH_SIZE", "128")),
         poll_lookback_minutes=int(os.getenv("WORKER_POLL_LOOKBACK_MINUTES", "180")),
         convex_url=os.getenv("NEXT_PUBLIC_CONVEX_URL", ""),
+        repair_window_hours=int(os.getenv("WORKER_REPAIR_WINDOW_HOURS", "72")),
+        recent_serving_window_hours=int(os.getenv("WORKER_RECENT_SERVING_WINDOW_HOURS", "168")),
+        backfill_start_date=os.getenv("WORKER_BACKFILL_START_DATE", "2015-01-01"),
+        backfill_end_date=os.getenv("WORKER_BACKFILL_END_DATE", ""),
+        outlet_registry_table=os.getenv("BQ_OUTLET_REGISTRY_TABLE", "outlets_norm"),
+        outlet_alias_table=os.getenv("BQ_OUTLET_ALIAS_TABLE", "outlet_domain_aliases"),
+        outlet_discovery_table=os.getenv("BQ_OUTLET_DISCOVERY_TABLE", "outlet_discovery_queue"),
+        event_universe_table=os.getenv("BQ_EVENT_UNIVERSE_TABLE", "event_universe"),
+        freshness_table=os.getenv("BQ_FRESHNESS_TABLE", "freshness_watermarks"),
+        backfill_tracker_table=os.getenv("BQ_BACKFILL_TRACKER_TABLE", "backfill_tracker"),
+        job_stale_after_minutes=int(os.getenv("WORKER_JOB_STALE_AFTER_MINUTES", "30")),
+        seed_outlets_path=Path(os.getenv("WORKER_SEED_OUTLETS_PATH", seed_path)),
     )
