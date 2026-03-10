@@ -85,7 +85,16 @@ def parse_masterfile(text: str) -> list[MasterfileEntry]:
         line = raw_line.strip()
         if not line:
             continue
-        published, size_bytes, url = line.split(maxsplit=2)
+        parts = line.split(maxsplit=2)
+        if len(parts) != 3:
+            continue
+        published, size_bytes, url = parts
+        if len(published) != 14 or not published.isdigit():
+            continue
+        if not size_bytes.isdigit():
+            continue
+        if not url.lower().startswith("http") or not url.lower().endswith(".zip"):
+            continue
         entries.append(
             MasterfileEntry(
                 published_at=parse_timestamp(published),

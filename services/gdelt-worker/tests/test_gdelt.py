@@ -3,7 +3,7 @@ import unittest
 import zipfile
 from datetime import datetime, timezone
 
-from worker.gdelt import build_backfill_windows, normalize_domain, parse_feed_batch
+from worker.gdelt import build_backfill_windows, normalize_domain, parse_feed_batch, parse_masterfile
 from worker.models import MasterfileEntry
 
 
@@ -22,6 +22,15 @@ class GdeltHelpersTests(unittest.TestCase):
     def test_build_backfill_windows_is_newest_first(self) -> None:
         windows = build_backfill_windows("2025-01-01", "2025-03-15")
         self.assertEqual([window.month_key for window in windows], ["2025-03", "2025-02", "2025-01"])
+
+    def test_parse_masterfile_skips_malformed_lines(self) -> None:
+        entries = parse_masterfile(
+            "20260309083000 123 http://data.gdeltproject.org/gdeltv2/20260309083000.export.CSV.zip\n"
+            "150383 http://data.gdeltproject.org/gdeltv2/bad-line.export.CSV.zip\n"
+            "not-a-timestamp 123 http://data.gdeltproject.org/gdeltv2/also-bad.export.CSV.zip"
+        )
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0].feed_type, "events")
 
     def test_parse_feed_batch_filters_mentions_to_allowed_domains(self) -> None:
         row_allowed = [""] * 13
