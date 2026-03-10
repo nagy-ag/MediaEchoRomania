@@ -34,23 +34,25 @@ class GdeltHelpersTests(unittest.TestCase):
         self.assertEqual(entries[0].source_checksum, "297a16b493de7cf6ca809a7cc31d0b93")
 
     def test_parse_feed_batch_filters_mentions_to_allowed_domains(self) -> None:
-        row_allowed = [""] * 13
+        row_allowed = [""] * 14
         row_allowed[0] = "101"
-        row_allowed[1] = "20260309083000"
-        row_allowed[2] = "1"
-        row_allowed[3] = "HotNews"
-        row_allowed[4] = "https://www.hotnews.ro/story"
-        row_allowed[10] = "90"
-        row_allowed[12] = "1.5"
+        row_allowed[1] = "20260309081500"
+        row_allowed[2] = "20260309083000"
+        row_allowed[3] = "1"
+        row_allowed[4] = "HotNews"
+        row_allowed[5] = "https://www.hotnews.ro/story"
+        row_allowed[11] = "90"
+        row_allowed[13] = "1.5"
 
-        row_blocked = [""] * 13
+        row_blocked = [""] * 14
         row_blocked[0] = "202"
-        row_blocked[1] = "20260309083000"
-        row_blocked[2] = "1"
-        row_blocked[3] = "Unknown"
-        row_blocked[4] = "https://unknown.example/story"
-        row_blocked[10] = "50"
-        row_blocked[12] = "-2.0"
+        row_blocked[1] = "20260309081500"
+        row_blocked[2] = "20260309083000"
+        row_blocked[3] = "1"
+        row_blocked[4] = "Unknown"
+        row_blocked[5] = "https://unknown.example/story"
+        row_blocked[11] = "50"
+        row_blocked[13] = "-2.0"
 
         payload = self._zip_payload("mentions.tsv", "\n".join(["\t".join(row_allowed), "\t".join(row_blocked)]))
         entry = MasterfileEntry(
@@ -65,6 +67,11 @@ class GdeltHelpersTests(unittest.TestCase):
         self.assertEqual(batch.accepted_event_ids, {101})
         self.assertEqual(batch.discovered_domains, {"unknown.example"})
         self.assertEqual(batch.rejected_rows, 1)
+        self.assertEqual(batch.rows[0]["mention_type"], "1")
+        self.assertEqual(batch.rows[0]["source_name"], "HotNews")
+        self.assertEqual(batch.rows[0]["source_url"], "https://www.hotnews.ro/story")
+        self.assertEqual(batch.rows[0]["confidence"], 90)
+        self.assertEqual(batch.rows[0]["mention_doc_tone"], 1.5)
 
     def test_parse_feed_batch_filters_events_to_known_event_ids(self) -> None:
         row_allowed = [""] * 58
