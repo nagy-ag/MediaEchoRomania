@@ -43,6 +43,13 @@ def parse_service_account() -> dict[str, str] | None:
         return None
 
 
+def resolve_seed_outlets_path(default_path: Path) -> Path:
+    configured = os.getenv("WORKER_SEED_OUTLETS_PATH", "").strip()
+    if not configured:
+        return default_path
+    return Path(configured)
+
+
 def load_settings() -> Settings:
     seed_path = Path(__file__).resolve().parent / "seeds" / "romanian_outlets.json"
     parse_service_account()
@@ -73,5 +80,5 @@ def load_settings() -> Settings:
         freshness_table=os.getenv("BQ_FRESHNESS_TABLE", "freshness_watermarks"),
         backfill_tracker_table=os.getenv("BQ_BACKFILL_TRACKER_TABLE", "backfill_tracker"),
         job_stale_after_minutes=int(os.getenv("WORKER_JOB_STALE_AFTER_MINUTES", "30")),
-        seed_outlets_path=Path(os.getenv("WORKER_SEED_OUTLETS_PATH", seed_path)),
+        seed_outlets_path=resolve_seed_outlets_path(seed_path),
     )

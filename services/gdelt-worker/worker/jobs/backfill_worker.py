@@ -11,6 +11,12 @@ from worker.jobs import normalizer, rollup_worker
 from worker.models import JobResult
 
 
+def _tracker_status(stats: dict[str, int]) -> str:
+    if stats["errors"] > 0:
+        return "partial"
+    return "loaded"
+
+
 def run(
     settings: Settings,
     start_date: str | None = None,
@@ -30,6 +36,7 @@ def run(
     total_rejected = 0
     total_discovered = 0
     total_errors = 0
+    total_duplicates = 0
     months_processed = 0
 
     for window in windows:
@@ -42,7 +49,7 @@ def run(
         warehouse.upsert_backfill_tracker(
             month_key=window.month_key,
             feed_type="mentions",
-            status="loaded",
+            status=_tracker_status(mention_stats),
             range_start=window.start_date.isoformat(),
             range_end=window.end_date.isoformat(),
             rows_accepted=mention_stats["rows_loaded"],
@@ -54,7 +61,7 @@ def run(
         warehouse.upsert_backfill_tracker(
             month_key=window.month_key,
             feed_type="gkg",
-            status="loaded",
+            status=_tracker_status(gkg_stats),
             range_start=window.start_date.isoformat(),
             range_end=window.end_date.isoformat(),
             rows_accepted=gkg_stats["rows_loaded"],
@@ -67,7 +74,7 @@ def run(
         warehouse.upsert_backfill_tracker(
             month_key=window.month_key,
             feed_type="events",
-            status="loaded",
+            status=_tracker_status(event_stats),
             range_start=window.start_date.isoformat(),
             range_end=window.end_date.isoformat(),
             rows_accepted=event_stats["rows_loaded"],
@@ -79,15 +86,22 @@ def run(
         total_rejected += mention_stats["rows_rejected"] + gkg_stats["rows_rejected"] + event_stats["rows_rejected"]
         total_discovered += mention_stats["discovered_domains"] + gkg_stats["discovered_domains"] + event_stats["discovered_domains"]
         total_errors += mention_stats["errors"] + gkg_stats["errors"] + event_stats["errors"]
+        total_duplicates += mention_stats["duplicate_files"] + gkg_stats["duplicate_files"] + event_stats["duplicate_files"]
         months_processed += 1
 
     normalizer.run(settings)
     rollup_worker.run(settings)
+    status = "success" if total_errors == 0 else "error"
+    summary = (
+        "Processed monthly historical GDELT backfill windows and refreshed the normalized and serving layers."
+        if status == "success"
+        else "Completed a partial backfill pass with file-level errors. Check backfill_tracker and ingest_errors before continuing."
+    )
     return JobResult(
         job_name="backfill-worker",
         request_id=f"backfill-worker-{uuid4()}",
-        status="success" if total_errors == 0 else "error",
-        summary="Processed monthly historical GDELT backfill windows and refreshed the normalized and serving layers.",
+        status=status,
+        summary=summary,
         business={
             "backfill_start_date": start_date or settings.backfill_start_date,
             "backfill_end_date": end_date or settings.backfill_end_date,
@@ -98,6 +112,7 @@ def run(
             "rows_rejected": total_rejected,
             "discovered_domains": total_discovered,
             "errors": total_errors,
+            "duplicate_files": total_duplicates,
         },
         started_at=started_at,
         finished_at=datetime.now(timezone.utc).isoformat(),

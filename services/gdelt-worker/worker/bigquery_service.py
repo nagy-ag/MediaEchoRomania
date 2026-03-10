@@ -137,6 +137,23 @@ class BigQueryService:
         rows = self.query_rows(sql, [bigquery.ArrayQueryParameter("source_files", "STRING", candidates)])
         return {str(row["source_file"]) for row in rows}
 
+    def raw_file_already_loaded(self, source_file: str, checksum: str) -> bool:
+        from google.cloud import bigquery
+
+        sql = f"""
+        SELECT COUNT(*) AS count
+        FROM `{self.table_ref(self.settings.datasets.raw, 'raw_files')}`
+        WHERE source_file = @source_file AND checksum = @checksum AND status = 'loaded'
+        """
+        count = self.query_rows(
+            sql,
+            [
+                bigquery.ScalarQueryParameter("source_file", "STRING", source_file),
+                bigquery.ScalarQueryParameter("checksum", "STRING", checksum),
+            ],
+        )[0]["count"]
+        return int(count) > 0
+
     def insert_masterfile_entries(self, entries: list[MasterfileEntry]) -> int:
         existing = self.existing_source_files(source_file_from_url(entry.url) for entry in entries)
         now = datetime.now(timezone.utc).isoformat()
@@ -228,22 +245,40 @@ class BigQueryService:
         )
 
     def append_discovery_domains(self, domains: set[str], source_file: str, sample_url: str) -> int:
+        from google.cloud import bigquery
+
         if not domains:
             return 0
-        now = datetime.now(timezone.utc).isoformat()
-        rows = [
-            {
-                "alias_domain": domain,
-                "first_seen_at": now,
-                "last_seen_at": now,
-                "sample_source_url": sample_url,
-                "source_file": source_file,
-                "source_count": 1,
-                "status": "pending_review",
-            }
-            for domain in sorted(domains)
-        ]
-        return self.load_rows(self.settings.datasets.ops, self.settings.outlet_discovery_table, rows)
+        merged = 0
+        table = self.table_ref(self.settings.datasets.ops, self.settings.outlet_discovery_table)
+        for domain in sorted(domains):
+            sql = f"""
+            MERGE `{table}` AS target
+            USING (
+              SELECT @alias_domain AS alias_domain, @sample_source_url AS sample_source_url, @source_file AS source_file
+            ) AS source
+            ON target.alias_domain = source.alias_domain
+            WHEN MATCHED THEN
+              UPDATE SET
+                last_seen_at = CURRENT_TIMESTAMP(),
+                sample_source_url = source.sample_source_url,
+                source_file = source.source_file,
+                source_count = target.source_count + 1,
+                status = IF(target.status = 'approved', target.status, 'pending_review')
+            WHEN NOT MATCHED THEN
+              INSERT (alias_domain, first_seen_at, last_seen_at, sample_source_url, source_file, source_count, status)
+              VALUES (source.alias_domain, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), source.sample_source_url, source.source_file, 1, 'pending_review')
+            """
+            config = bigquery.QueryJobConfig(
+                query_parameters=[
+                    bigquery.ScalarQueryParameter("alias_domain", "STRING", domain),
+                    bigquery.ScalarQueryParameter("sample_source_url", "STRING", sample_url),
+                    bigquery.ScalarQueryParameter("source_file", "STRING", source_file),
+                ]
+            )
+            self.client.query(sql, job_config=config).result()
+            merged += 1
+        return merged
 
     def append_event_universe(
         self,
@@ -253,7 +288,9 @@ class BigQueryService:
         window_end: str,
         scope: str,
     ) -> int:
-        if not event_ids:
+        existing_ids = self.event_ids_for_window(window_key, scope)
+        new_event_ids = sorted(event_ids - existing_ids)
+        if not new_event_ids:
             return 0
         now = datetime.now(timezone.utc).isoformat()
         rows = [
@@ -265,7 +302,7 @@ class BigQueryService:
                 "global_event_id": event_id,
                 "created_at": now,
             }
-            for event_id in sorted(event_ids)
+            for event_id in new_event_ids
         ]
         return self.load_rows(self.settings.datasets.ops, self.settings.event_universe_table, rows)
 

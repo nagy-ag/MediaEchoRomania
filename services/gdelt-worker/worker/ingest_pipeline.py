@@ -34,6 +34,7 @@ def ingest_entries(
         "discovered_domains": 0,
         "accepted_event_ids": 0,
         "errors": 0,
+        "duplicate_files": 0,
     }
 
     for entry in sort_entries_for_ingest(entries):
@@ -42,6 +43,13 @@ def ingest_entries(
         try:
             payload = fetch_bytes(entry.url)
             batch = parse_feed_batch(entry, payload, approved_domains, event_ids)
+
+            if warehouse.raw_file_already_loaded(source_file, batch.checksum):
+                stats["duplicate_files"] += 1
+                if update_registry:
+                    warehouse.update_ingest_registry(source_file, status="downloaded", checksum=batch.checksum, rows_loaded=0)
+                continue
+
             event_ids.update(batch.accepted_event_ids)
             window_key = entry.published_at.strftime("%Y-%m") if scope == "backfill" else entry.published_at.strftime("%Y%m%d%H%M")
 
