@@ -1,589 +1,886 @@
 {
-  "outlets": [
-    {
-      "outlet_id": "agerpres",
-      "canonical_domain": "agerpres.ro",
-      "canonical_name": "Agerpres",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "wire",
-      "source_class": "news-agency",
-      "status": "active",
-      "aliases": ["agerpres.ro", "www.agerpres.ro"]
-    },
-    {
-      "outlet_id": "digi24",
-      "canonical_domain": "digi24.ro",
-      "canonical_name": "Digi24",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "tv-digital",
-      "source_class": "broadcast",
-      "status": "active",
-      "aliases": ["digi24.ro", "www.digi24.ro"]
-    },
-    {
-      "outlet_id": "hotnews",
-      "canonical_domain": "hotnews.ro",
-      "canonical_name": "HotNews",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "digital",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["hotnews.ro", "www.hotnews.ro"]
-    },
-    {
-      "outlet_id": "g4media",
-      "canonical_domain": "g4media.ro",
-      "canonical_name": "G4Media",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "digital",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["g4media.ro", "www.g4media.ro"]
-    },
-    {
-      "outlet_id": "libertatea",
-      "canonical_domain": "libertatea.ro",
-      "canonical_name": "Libertatea",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "tabloid-digital",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["libertatea.ro", "www.libertatea.ro"]
-    },
-    {
-      "outlet_id": "adevarul",
-      "canonical_domain": "adevarul.ro",
-      "canonical_name": "Adevarul",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "digital",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["adevarul.ro", "www.adevarul.ro"]
-    },
-    {
-      "outlet_id": "antena3",
-      "canonical_domain": "antena3.ro",
-      "canonical_name": "Antena 3 CNN",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "tv-digital",
-      "source_class": "broadcast",
-      "status": "active",
-      "aliases": ["antena3.ro", "www.antena3.ro", "antena3cnn.ro", "www.antena3cnn.ro"]
-    },
-    {
-      "outlet_id": "stirileprotv",
-      "canonical_domain": "stirileprotv.ro",
-      "canonical_name": "Stirile PRO TV",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "tv-digital",
-      "source_class": "broadcast",
-      "status": "active",
-      "aliases": ["stirileprotv.ro", "www.stirileprotv.ro"]
-    },
-    {
-      "outlet_id": "romaniatv",
-      "canonical_domain": "romaniatv.net",
-      "canonical_name": "Romania TV",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "tv-digital",
-      "source_class": "broadcast",
-      "status": "active",
-      "aliases": ["romaniatv.net", "www.romaniatv.net"]
-    },
-    {
-      "outlet_id": "newsro",
-      "canonical_domain": "news.ro",
-      "canonical_name": "News.ro",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "wire",
-      "source_class": "news-agency",
-      "status": "active",
-      "aliases": ["news.ro", "www.news.ro"]
-    },
-    {
-      "outlet_id": "zf",
-      "canonical_domain": "zf.ro",
-      "canonical_name": "Ziarul Financiar",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "business",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["zf.ro", "www.zf.ro"]
-    },
-    {
-      "outlet_id": "spotmedia",
-      "canonical_domain": "spotmedia.ro",
-      "canonical_name": "SpotMedia",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "digital",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["spotmedia.ro", "www.spotmedia.ro"]
-    },
-    {
-      "outlet_id": "biziday",
-      "canonical_domain": "biziday.ro",
-      "canonical_name": "Biziday",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "digital",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["biziday.ro", "www.biziday.ro"]
-    },
-    {
-      "outlet_id": "profit",
-      "canonical_domain": "profit.ro",
-      "canonical_name": "Profit.ro",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "business",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["profit.ro", "www.profit.ro"]
-    },
-    {
-      "outlet_id": "observatornews",
-      "canonical_domain": "observatornews.ro",
-      "canonical_name": "Observator News",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "tv-digital",
-      "source_class": "broadcast",
-      "status": "active",
-      "aliases": ["observatornews.ro", "www.observatornews.ro"]
-    },
-    {
-      "outlet_id": "dcnews",
-      "canonical_domain": "dcnews.ro",
-      "canonical_name": "DC News",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "digital",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["dcnews.ro", "www.dcnews.ro"]
-    },
-    {
-      "outlet_id": "euractivro",
-      "canonical_domain": "euractiv.ro",
-      "canonical_name": "Euractiv Romania",
-      "is_romanian": true,
-      "is_local": false,
-      "is_national": true,
-      "region": "Bucharest",
-      "media_type": "digital",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["euractiv.ro", "www.euractiv.ro"]
-    },
-    {
-      "outlet_id": "ziaruldeiasi",
-      "canonical_domain": "ziaruldeiasi.ro",
-      "canonical_name": "Ziarul de Iasi",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Moldova",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["ziaruldeiasi.ro", "www.ziaruldeiasi.ro"]
-    },
-    {
-      "outlet_id": "bzi",
-      "canonical_domain": "bzi.ro",
-      "canonical_name": "Buna Ziua Iasi",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Moldova",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["bzi.ro", "www.bzi.ro"]
-    },
-    {
-      "outlet_id": "monitorulsv",
-      "canonical_domain": "monitorulsv.ro",
-      "canonical_name": "Monitorul de Suceava",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Moldova",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["monitorulsv.ro", "www.monitorulsv.ro"]
-    },
-    {
-      "outlet_id": "monitorulbt",
-      "canonical_domain": "monitorulbt.ro",
-      "canonical_name": "Monitorul de Botosani",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Moldova",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["monitorulbt.ro", "www.monitorulbt.ro"]
-    },
-    {
-      "outlet_id": "ziardebacau",
-      "canonical_domain": "ziaruldebacau.ro",
-      "canonical_name": "Ziarul de Bacau",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Moldova",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["ziaruldebacau.ro", "www.ziaruldebacau.ro"]
-    },
-    {
-      "outlet_id": "ebihoreanul",
-      "canonical_domain": "ebihoreanul.ro",
-      "canonical_name": "Bihoreanul",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Crisana",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["ebihoreanul.ro", "www.ebihoreanul.ro"]
-    },
-    {
-      "outlet_id": "bihon",
-      "canonical_domain": "bihon.ro",
-      "canonical_name": "Bihon",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Crisana",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["bihon.ro", "www.bihon.ro"]
-    },
-    {
-      "outlet_id": "crisana",
-      "canonical_domain": "crisana.ro",
-      "canonical_name": "Crisana",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Crisana",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["crisana.ro", "www.crisana.ro"]
-    },
-    {
-      "outlet_id": "opiniatimisoarei",
-      "canonical_domain": "opiniatimisoarei.ro",
-      "canonical_name": "Opinia Timisoarei",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Banat",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["opiniatimisoarei.ro", "www.opiniatimisoarei.ro"]
-    },
-    {
-      "outlet_id": "tion",
-      "canonical_domain": "tion.ro",
-      "canonical_name": "Tion",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Banat",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["tion.ro", "www.tion.ro"]
-    },
-    {
-      "outlet_id": "pressalert",
-      "canonical_domain": "pressalert.ro",
-      "canonical_name": "Pressalert",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Banat",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["pressalert.ro", "www.pressalert.ro"]
-    },
-    {
-      "outlet_id": "debanat",
-      "canonical_domain": "debanat.ro",
-      "canonical_name": "deBanat",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Banat",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["debanat.ro", "www.debanat.ro"]
-    },
-    {
-      "outlet_id": "turnulsfatului",
-      "canonical_domain": "turnulsfatului.ro",
-      "canonical_name": "Turnul Sfatului",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Transylvania",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["turnulsfatului.ro", "www.turnulsfatului.ro"]
-    },
-    {
-      "outlet_id": "ziardecluj",
-      "canonical_domain": "ziardecluj.ro",
-      "canonical_name": "Ziar de Cluj",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Transylvania",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["ziardecluj.ro", "www.ziardecluj.ro"]
-    },
-    {
-      "outlet_id": "stiridecluj",
-      "canonical_domain": "stiridecluj.ro",
-      "canonical_name": "Stiri de Cluj",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Transylvania",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["stiridecluj.ro", "www.stiridecluj.ro"]
-    },
-    {
-      "outlet_id": "actualdecluj",
-      "canonical_domain": "actualdecluj.ro",
-      "canonical_name": "Actual de Cluj",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Transylvania",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["actualdecluj.ro", "www.actualdecluj.ro"]
-    },
-    {
-      "outlet_id": "monitorulcj",
-      "canonical_domain": "monitorulcj.ro",
-      "canonical_name": "Monitorul de Cluj",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Transylvania",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["monitorulcj.ro", "www.monitorulcj.ro"]
-    },
-    {
-      "outlet_id": "servuscluj",
-      "canonical_domain": "servuscluj.ro",
-      "canonical_name": "Servus Cluj",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Transylvania",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["servuscluj.ro", "www.servuscluj.ro"]
-    },
-    {
-      "outlet_id": "ziarulunirea",
-      "canonical_domain": "ziarulunirea.ro",
-      "canonical_name": "Ziarul Unirea",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Transylvania",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["ziarulunirea.ro", "www.ziarulunirea.ro"]
-    },
-    {
-      "outlet_id": "viatalibera",
-      "canonical_domain": "viata-libera.ro",
-      "canonical_name": "Viata Libera",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Moldova",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["viata-libera.ro", "www.viata-libera.ro"]
-    },
-    {
-      "outlet_id": "obiectivbr",
-      "canonical_domain": "obiectivbr.ro",
-      "canonical_name": "Obiectiv Vocea Brailei",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Muntenia",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["obiectivbr.ro", "www.obiectivbr.ro"]
-    },
-    {
-      "outlet_id": "cugetliber",
-      "canonical_domain": "cugetliber.ro",
-      "canonical_name": "Cuget Liber",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Dobrogea",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["cugetliber.ro", "www.cugetliber.ro"]
-    },
-    {
-      "outlet_id": "replicaonline",
-      "canonical_domain": "replicaonline.ro",
-      "canonical_name": "Replica Online",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Dobrogea",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["replicaonline.ro", "www.replicaonline.ro"]
-    },
-    {
-      "outlet_id": "gds",
-      "canonical_domain": "gds.ro",
-      "canonical_name": "Gazeta de Sud",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Oltenia",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["gds.ro", "www.gds.ro"]
-    },
-    {
-      "outlet_id": "monitorulexpres",
-      "canonical_domain": "monitorulexpres.ro",
-      "canonical_name": "Monitorul Expres",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Transylvania",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["monitorulexpres.ro", "www.monitorulexpres.ro"]
-    },
-    {
-      "outlet_id": "bzb",
-      "canonical_domain": "bzb.ro",
-      "canonical_name": "Buna Ziua Brasov",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Transylvania",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["bzb.ro", "www.bzb.ro"]
-    },
-    {
-      "outlet_id": "orasulsibiu",
-      "canonical_domain": "orasulsibiu.ro",
-      "canonical_name": "Orasul Sibiu",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Transylvania",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["orasulsibiu.ro", "www.orasulsibiu.ro"]
-    },
-    {
-      "outlet_id": "dejeanul",
-      "canonical_domain": "dejeanul.ro",
-      "canonical_name": "Dejeanul",
-      "is_romanian": true,
-      "is_local": true,
-      "is_national": false,
-      "region": "Transylvania",
-      "media_type": "regional",
-      "source_class": "news-site",
-      "status": "active",
-      "aliases": ["dejeanul.ro", "www.dejeanul.ro"]
-    }
-  ]
+    "outlets":  [
+                    {
+                        "outlet_id":  "agerpres",
+                        "canonical_domain":  "agerpres.ro",
+                        "canonical_name":  "Agerpres",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "wire",
+                        "source_class":  "news-agency",
+                        "status":  "active",
+                        "aliases":  [
+                                        "agerpres.ro",
+                                        "www.agerpres.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "digi24",
+                        "canonical_domain":  "digi24.ro",
+                        "canonical_name":  "Digi24",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "tv-digital",
+                        "source_class":  "broadcast",
+                        "status":  "active",
+                        "aliases":  [
+                                        "digi24.ro",
+                                        "www.digi24.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "hotnews",
+                        "canonical_domain":  "hotnews.ro",
+                        "canonical_name":  "HotNews",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "hotnews.ro",
+                                        "www.hotnews.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "g4media",
+                        "canonical_domain":  "g4media.ro",
+                        "canonical_name":  "G4Media",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "g4media.ro",
+                                        "www.g4media.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "libertatea",
+                        "canonical_domain":  "libertatea.ro",
+                        "canonical_name":  "Libertatea",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "tabloid-digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "libertatea.ro",
+                                        "www.libertatea.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "adevarul",
+                        "canonical_domain":  "adevarul.ro",
+                        "canonical_name":  "Adevarul",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "adevarul.ro",
+                                        "www.adevarul.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "antena3",
+                        "canonical_domain":  "antena3.ro",
+                        "canonical_name":  "Antena 3 CNN",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "tv-digital",
+                        "source_class":  "broadcast",
+                        "status":  "active",
+                        "aliases":  [
+                                        "antena3.ro",
+                                        "www.antena3.ro",
+                                        "antena3cnn.ro",
+                                        "www.antena3cnn.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "stirileprotv",
+                        "canonical_domain":  "stirileprotv.ro",
+                        "canonical_name":  "Stirile PRO TV",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "tv-digital",
+                        "source_class":  "broadcast",
+                        "status":  "active",
+                        "aliases":  [
+                                        "stirileprotv.ro",
+                                        "www.stirileprotv.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "romaniatv",
+                        "canonical_domain":  "romaniatv.net",
+                        "canonical_name":  "Romania TV",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "tv-digital",
+                        "source_class":  "broadcast",
+                        "status":  "active",
+                        "aliases":  [
+                                        "romaniatv.net",
+                                        "www.romaniatv.net"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "newsro",
+                        "canonical_domain":  "news.ro",
+                        "canonical_name":  "News.ro",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "wire",
+                        "source_class":  "news-agency",
+                        "status":  "active",
+                        "aliases":  [
+                                        "news.ro",
+                                        "www.news.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "zf",
+                        "canonical_domain":  "zf.ro",
+                        "canonical_name":  "Ziarul Financiar",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "business",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "zf.ro",
+                                        "www.zf.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "spotmedia",
+                        "canonical_domain":  "spotmedia.ro",
+                        "canonical_name":  "SpotMedia",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "spotmedia.ro",
+                                        "www.spotmedia.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "biziday",
+                        "canonical_domain":  "biziday.ro",
+                        "canonical_name":  "Biziday",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "biziday.ro",
+                                        "www.biziday.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "profit",
+                        "canonical_domain":  "profit.ro",
+                        "canonical_name":  "Profit.ro",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "business",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "profit.ro",
+                                        "www.profit.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "observatornews",
+                        "canonical_domain":  "observatornews.ro",
+                        "canonical_name":  "Observator News",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "tv-digital",
+                        "source_class":  "broadcast",
+                        "status":  "active",
+                        "aliases":  [
+                                        "observatornews.ro",
+                                        "www.observatornews.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "dcnews",
+                        "canonical_domain":  "dcnews.ro",
+                        "canonical_name":  "DC News",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "dcnews.ro",
+                                        "www.dcnews.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "euractivro",
+                        "canonical_domain":  "euractiv.ro",
+                        "canonical_name":  "Euractiv Romania",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "euractiv.ro",
+                                        "www.euractiv.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "ziaruldeiasi",
+                        "canonical_domain":  "ziaruldeiasi.ro",
+                        "canonical_name":  "Ziarul de Iasi",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Moldova",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "ziaruldeiasi.ro",
+                                        "www.ziaruldeiasi.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "bzi",
+                        "canonical_domain":  "bzi.ro",
+                        "canonical_name":  "Buna Ziua Iasi",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Moldova",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "bzi.ro",
+                                        "www.bzi.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "monitorulsv",
+                        "canonical_domain":  "monitorulsv.ro",
+                        "canonical_name":  "Monitorul de Suceava",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Moldova",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "monitorulsv.ro",
+                                        "www.monitorulsv.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "monitorulbt",
+                        "canonical_domain":  "monitorulbt.ro",
+                        "canonical_name":  "Monitorul de Botosani",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Moldova",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "monitorulbt.ro",
+                                        "www.monitorulbt.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "ziardebacau",
+                        "canonical_domain":  "ziaruldebacau.ro",
+                        "canonical_name":  "Ziarul de Bacau",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Moldova",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "ziaruldebacau.ro",
+                                        "www.ziaruldebacau.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "ebihoreanul",
+                        "canonical_domain":  "ebihoreanul.ro",
+                        "canonical_name":  "Bihoreanul",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Crisana",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "ebihoreanul.ro",
+                                        "www.ebihoreanul.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "bihon",
+                        "canonical_domain":  "bihon.ro",
+                        "canonical_name":  "Bihon",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Crisana",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "bihon.ro",
+                                        "www.bihon.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "crisana",
+                        "canonical_domain":  "crisana.ro",
+                        "canonical_name":  "Crisana",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Crisana",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "crisana.ro",
+                                        "www.crisana.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "opiniatimisoarei",
+                        "canonical_domain":  "opiniatimisoarei.ro",
+                        "canonical_name":  "Opinia Timisoarei",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Banat",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "opiniatimisoarei.ro",
+                                        "www.opiniatimisoarei.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "tion",
+                        "canonical_domain":  "tion.ro",
+                        "canonical_name":  "Tion",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Banat",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "tion.ro",
+                                        "www.tion.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "pressalert",
+                        "canonical_domain":  "pressalert.ro",
+                        "canonical_name":  "Pressalert",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Banat",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "pressalert.ro",
+                                        "www.pressalert.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "debanat",
+                        "canonical_domain":  "debanat.ro",
+                        "canonical_name":  "deBanat",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Banat",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "debanat.ro",
+                                        "www.debanat.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "turnulsfatului",
+                        "canonical_domain":  "turnulsfatului.ro",
+                        "canonical_name":  "Turnul Sfatului",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Transylvania",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "turnulsfatului.ro",
+                                        "www.turnulsfatului.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "ziardecluj",
+                        "canonical_domain":  "ziardecluj.ro",
+                        "canonical_name":  "Ziar de Cluj",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Transylvania",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "ziardecluj.ro",
+                                        "www.ziardecluj.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "stiridecluj",
+                        "canonical_domain":  "stiridecluj.ro",
+                        "canonical_name":  "Stiri de Cluj",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Transylvania",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "stiridecluj.ro",
+                                        "www.stiridecluj.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "actualdecluj",
+                        "canonical_domain":  "actualdecluj.ro",
+                        "canonical_name":  "Actual de Cluj",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Transylvania",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "actualdecluj.ro",
+                                        "www.actualdecluj.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "monitorulcj",
+                        "canonical_domain":  "monitorulcj.ro",
+                        "canonical_name":  "Monitorul de Cluj",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Transylvania",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "monitorulcj.ro",
+                                        "www.monitorulcj.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "servuscluj",
+                        "canonical_domain":  "servuscluj.ro",
+                        "canonical_name":  "Servus Cluj",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Transylvania",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "servuscluj.ro",
+                                        "www.servuscluj.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "ziarulunirea",
+                        "canonical_domain":  "ziarulunirea.ro",
+                        "canonical_name":  "Ziarul Unirea",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Transylvania",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "ziarulunirea.ro",
+                                        "www.ziarulunirea.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "viatalibera",
+                        "canonical_domain":  "viata-libera.ro",
+                        "canonical_name":  "Viata Libera",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Moldova",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "viata-libera.ro",
+                                        "www.viata-libera.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "obiectivbr",
+                        "canonical_domain":  "obiectivbr.ro",
+                        "canonical_name":  "Obiectiv Vocea Brailei",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Muntenia",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "obiectivbr.ro",
+                                        "www.obiectivbr.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "cugetliber",
+                        "canonical_domain":  "cugetliber.ro",
+                        "canonical_name":  "Cuget Liber",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Dobrogea",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "cugetliber.ro",
+                                        "www.cugetliber.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "replicaonline",
+                        "canonical_domain":  "replicaonline.ro",
+                        "canonical_name":  "Replica Online",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Dobrogea",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "replicaonline.ro",
+                                        "www.replicaonline.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "gds",
+                        "canonical_domain":  "gds.ro",
+                        "canonical_name":  "Gazeta de Sud",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Oltenia",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "gds.ro",
+                                        "www.gds.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "monitorulexpres",
+                        "canonical_domain":  "monitorulexpres.ro",
+                        "canonical_name":  "Monitorul Expres",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Transylvania",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "monitorulexpres.ro",
+                                        "www.monitorulexpres.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "bzb",
+                        "canonical_domain":  "bzb.ro",
+                        "canonical_name":  "Buna Ziua Brasov",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Transylvania",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "bzb.ro",
+                                        "www.bzb.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "orasulsibiu",
+                        "canonical_domain":  "orasulsibiu.ro",
+                        "canonical_name":  "Orasul Sibiu",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Transylvania",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "orasulsibiu.ro",
+                                        "www.orasulsibiu.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "dejeanul",
+                        "canonical_domain":  "dejeanul.ro",
+                        "canonical_name":  "Dejeanul",
+                        "is_romanian":  true,
+                        "is_local":  true,
+                        "is_national":  false,
+                        "region":  "Transylvania",
+                        "media_type":  "regional",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "dejeanul.ro",
+                                        "www.dejeanul.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "ziarecom",
+                        "canonical_domain":  "ziare.com",
+                        "canonical_name":  "Ziare.com",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "ziare.com",
+                                        "www.ziare.com"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "stiripesurse",
+                        "canonical_domain":  "stiripesurse.ro",
+                        "canonical_name":  "StiriPeSurse",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "stiripesurse.ro",
+                                        "www.stiripesurse.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "mediafax",
+                        "canonical_domain":  "mediafax.ro",
+                        "canonical_name":  "Mediafax",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "wire",
+                        "source_class":  "news-agency",
+                        "status":  "active",
+                        "aliases":  [
+                                        "mediafax.ro",
+                                        "www.mediafax.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "gandul",
+                        "canonical_domain":  "gandul.ro",
+                        "canonical_name":  "Gandul",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "gandul.ro",
+                                        "www.gandul.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "evz",
+                        "canonical_domain":  "evz.ro",
+                        "canonical_name":  "Evenimentul Zilei",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "evz.ro",
+                                        "www.evz.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "euronewsro",
+                        "canonical_domain":  "euronews.ro",
+                        "canonical_name":  "Euronews Romania",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "tv-digital",
+                        "source_class":  "broadcast",
+                        "status":  "active",
+                        "aliases":  [
+                                        "euronews.ro",
+                                        "www.euronews.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "b1tv",
+                        "canonical_domain":  "b1tv.ro",
+                        "canonical_name":  "B1 TV",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "tv-digital",
+                        "source_class":  "broadcast",
+                        "status":  "active",
+                        "aliases":  [
+                                        "b1tv.ro",
+                                        "www.b1tv.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "recorder",
+                        "canonical_domain":  "recorder.ro",
+                        "canonical_name":  "Recorder",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "recorder.ro",
+                                        "www.recorder.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "edupedu",
+                        "canonical_domain":  "edupedu.ro",
+                        "canonical_name":  "Edupedu",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "edupedu.ro",
+                                        "www.edupedu.ro"
+                                    ]
+                    },
+                    {
+                        "outlet_id":  "fanatik",
+                        "canonical_domain":  "fanatik.ro",
+                        "canonical_name":  "Fanatik",
+                        "is_romanian":  true,
+                        "is_local":  false,
+                        "is_national":  true,
+                        "region":  "Bucharest",
+                        "media_type":  "digital",
+                        "source_class":  "news-site",
+                        "status":  "active",
+                        "aliases":  [
+                                        "fanatik.ro",
+                                        "www.fanatik.ro"
+                                    ]
+                    }
+                ]
 }
