@@ -7,7 +7,11 @@ CREATE TABLE IF NOT EXISTS `{{ project_id }}.gdelt_ops.job_runs` (
   finished_at TIMESTAMP,
   status STRING,
   summary STRING,
-  payload_json STRING
+  payload_json STRING,
+  progress_step INT64,
+  progress_total_steps INT64,
+  progress_message STRING,
+  is_complete BOOL
 )
 PARTITION BY DATE(started_at)
 CLUSTER BY job_name, status;
@@ -18,7 +22,13 @@ CREATE TABLE IF NOT EXISTS `{{ project_id }}.gdelt_ops.job_status` (
   last_error_at TIMESTAMP,
   stale_after_minutes INT64,
   status STRING,
-  notes STRING
+  notes STRING,
+  active_request_id STRING,
+  in_progress BOOL,
+  progress_step INT64,
+  progress_total_steps INT64,
+  progress_message STRING,
+  progress_updated_at TIMESTAMP
 )
 CLUSTER BY job_name, status;
 

@@ -409,21 +409,229 @@ class BigQueryService:
         )
         self.client.query(sql, job_config=config).result()
 
+    def record_job_start(
+        self,
+        job_name: str,
+        request_id: str,
+        summary: str,
+        progress_total_steps: int | None = None,
+        progress_message: str | None = None,
+    ) -> None:
+        from google.cloud import bigquery
+
+        started_at = datetime.now(timezone.utc).isoformat()
+        progress_step = 0
+
+        runs_table = self.table_ref(self.settings.datasets.ops, "job_runs")
+        runs_sql = f"""
+        MERGE `{runs_table}` AS target
+        USING (
+          SELECT
+            @job_name AS job_name,
+            @request_id AS request_id,
+            TIMESTAMP(@started_at) AS started_at,
+            @summary AS summary,
+            @progress_step AS progress_step,
+            @progress_total_steps AS progress_total_steps,
+            @progress_message AS progress_message
+        ) AS source
+        ON target.request_id = source.request_id
+        WHEN MATCHED THEN
+          UPDATE SET
+            job_name = source.job_name,
+            started_at = COALESCE(target.started_at, source.started_at),
+            status = 'running',
+            summary = source.summary,
+            progress_step = source.progress_step,
+            progress_total_steps = source.progress_total_steps,
+            progress_message = source.progress_message,
+            is_complete = FALSE
+        WHEN NOT MATCHED THEN
+          INSERT (job_name, request_id, started_at, finished_at, status, summary, payload_json, progress_step, progress_total_steps, progress_message, is_complete)
+          VALUES (source.job_name, source.request_id, source.started_at, NULL, 'running', source.summary, NULL, source.progress_step, source.progress_total_steps, source.progress_message, FALSE)
+        """
+        runs_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("job_name", "STRING", job_name),
+                bigquery.ScalarQueryParameter("request_id", "STRING", request_id),
+                bigquery.ScalarQueryParameter("started_at", "STRING", started_at),
+                bigquery.ScalarQueryParameter("summary", "STRING", summary),
+                bigquery.ScalarQueryParameter("progress_step", "INT64", progress_step),
+                bigquery.ScalarQueryParameter("progress_total_steps", "INT64", progress_total_steps),
+                bigquery.ScalarQueryParameter("progress_message", "STRING", progress_message),
+            ]
+        )
+        self.client.query(runs_sql, job_config=runs_config).result()
+
+        status_table = self.table_ref(self.settings.datasets.ops, "job_status")
+        status_sql = f"""
+        MERGE `{status_table}` AS target
+        USING (
+          SELECT
+            @job_name AS job_name,
+            @request_id AS request_id,
+            @summary AS summary,
+            @progress_step AS progress_step,
+            @progress_total_steps AS progress_total_steps,
+            @progress_message AS progress_message
+        ) AS source
+        ON target.job_name = source.job_name
+        WHEN MATCHED THEN
+          UPDATE SET
+            stale_after_minutes = {self.settings.job_stale_after_minutes},
+            notes = source.summary,
+            active_request_id = source.request_id,
+            in_progress = TRUE,
+            progress_step = source.progress_step,
+            progress_total_steps = source.progress_total_steps,
+            progress_message = source.progress_message,
+            progress_updated_at = CURRENT_TIMESTAMP()
+        WHEN NOT MATCHED THEN
+          INSERT (job_name, last_success_at, last_error_at, stale_after_minutes, status, notes, active_request_id, in_progress, progress_step, progress_total_steps, progress_message, progress_updated_at)
+          VALUES (source.job_name, NULL, NULL, {self.settings.job_stale_after_minutes}, 'healthy', source.summary, source.request_id, TRUE, source.progress_step, source.progress_total_steps, source.progress_message, CURRENT_TIMESTAMP())
+        """
+        status_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("job_name", "STRING", job_name),
+                bigquery.ScalarQueryParameter("request_id", "STRING", request_id),
+                bigquery.ScalarQueryParameter("summary", "STRING", summary),
+                bigquery.ScalarQueryParameter("progress_step", "INT64", progress_step),
+                bigquery.ScalarQueryParameter("progress_total_steps", "INT64", progress_total_steps),
+                bigquery.ScalarQueryParameter("progress_message", "STRING", progress_message),
+            ]
+        )
+        self.client.query(status_sql, job_config=status_config).result()
+
+    def update_job_progress(
+        self,
+        job_name: str,
+        request_id: str,
+        progress_step: int,
+        progress_total_steps: int,
+        progress_message: str,
+    ) -> None:
+        from google.cloud import bigquery
+
+        runs_table = self.table_ref(self.settings.datasets.ops, "job_runs")
+        runs_sql = f"""
+        MERGE `{runs_table}` AS target
+        USING (
+          SELECT
+            @job_name AS job_name,
+            @request_id AS request_id,
+            @progress_step AS progress_step,
+            @progress_total_steps AS progress_total_steps,
+            @progress_message AS progress_message
+        ) AS source
+        ON target.request_id = source.request_id
+        WHEN MATCHED THEN
+          UPDATE SET
+            status = IF(target.is_complete, target.status, 'running'),
+            progress_step = source.progress_step,
+            progress_total_steps = source.progress_total_steps,
+            progress_message = source.progress_message,
+            is_complete = FALSE
+        WHEN NOT MATCHED THEN
+          INSERT (job_name, request_id, started_at, finished_at, status, summary, payload_json, progress_step, progress_total_steps, progress_message, is_complete)
+          VALUES (source.job_name, source.request_id, CURRENT_TIMESTAMP(), NULL, 'running', source.progress_message, NULL, source.progress_step, source.progress_total_steps, source.progress_message, FALSE)
+        """
+        runs_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("job_name", "STRING", job_name),
+                bigquery.ScalarQueryParameter("request_id", "STRING", request_id),
+                bigquery.ScalarQueryParameter("progress_step", "INT64", progress_step),
+                bigquery.ScalarQueryParameter("progress_total_steps", "INT64", progress_total_steps),
+                bigquery.ScalarQueryParameter("progress_message", "STRING", progress_message),
+            ]
+        )
+        self.client.query(runs_sql, job_config=runs_config).result()
+
+        status_table = self.table_ref(self.settings.datasets.ops, "job_status")
+        status_sql = f"""
+        MERGE `{status_table}` AS target
+        USING (
+          SELECT
+            @job_name AS job_name,
+            @request_id AS request_id,
+            @progress_step AS progress_step,
+            @progress_total_steps AS progress_total_steps,
+            @progress_message AS progress_message
+        ) AS source
+        ON target.job_name = source.job_name
+        WHEN MATCHED THEN
+          UPDATE SET
+            stale_after_minutes = {self.settings.job_stale_after_minutes},
+            active_request_id = source.request_id,
+            in_progress = TRUE,
+            progress_step = source.progress_step,
+            progress_total_steps = source.progress_total_steps,
+            progress_message = source.progress_message,
+            progress_updated_at = CURRENT_TIMESTAMP()
+        WHEN NOT MATCHED THEN
+          INSERT (job_name, last_success_at, last_error_at, stale_after_minutes, status, notes, active_request_id, in_progress, progress_step, progress_total_steps, progress_message, progress_updated_at)
+          VALUES (source.job_name, NULL, NULL, {self.settings.job_stale_after_minutes}, 'healthy', source.progress_message, source.request_id, TRUE, source.progress_step, source.progress_total_steps, source.progress_message, CURRENT_TIMESTAMP())
+        """
+        status_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("job_name", "STRING", job_name),
+                bigquery.ScalarQueryParameter("request_id", "STRING", request_id),
+                bigquery.ScalarQueryParameter("progress_step", "INT64", progress_step),
+                bigquery.ScalarQueryParameter("progress_total_steps", "INT64", progress_total_steps),
+                bigquery.ScalarQueryParameter("progress_message", "STRING", progress_message),
+            ]
+        )
+        self.client.query(status_sql, job_config=status_config).result()
+
     def record_job_result(self, result: JobResult) -> None:
         from google.cloud import bigquery
 
         started_at = result.started_at or datetime.now(timezone.utc).isoformat()
         finished_at = result.finished_at or datetime.now(timezone.utc).isoformat()
-        run_row = {
-            "job_name": result.job_name,
-            "request_id": result.request_id,
-            "started_at": started_at,
-            "finished_at": finished_at,
-            "status": result.status,
-            "summary": result.summary,
-            "payload_json": json.dumps(result.asdict(), sort_keys=True),
-        }
-        self.load_rows(self.settings.datasets.ops, "job_runs", [run_row])
+        payload_json = json.dumps(result.asdict(), sort_keys=True)
+
+        runs_table = self.table_ref(self.settings.datasets.ops, "job_runs")
+        runs_sql = f"""
+        MERGE `{runs_table}` AS target
+        USING (
+          SELECT
+            @job_name AS job_name,
+            @request_id AS request_id,
+            TIMESTAMP(@started_at) AS started_at,
+            TIMESTAMP(@finished_at) AS finished_at,
+            @status AS status,
+            @summary AS summary,
+            @payload_json AS payload_json
+        ) AS source
+        ON target.request_id = source.request_id
+        WHEN MATCHED THEN
+          UPDATE SET
+            job_name = source.job_name,
+            started_at = COALESCE(target.started_at, source.started_at),
+            finished_at = source.finished_at,
+            status = source.status,
+            summary = source.summary,
+            payload_json = source.payload_json,
+            progress_step = COALESCE(target.progress_total_steps, target.progress_step),
+            progress_total_steps = target.progress_total_steps,
+            progress_message = IF(source.status = 'success', 'completed', 'failed'),
+            is_complete = TRUE
+        WHEN NOT MATCHED THEN
+          INSERT (job_name, request_id, started_at, finished_at, status, summary, payload_json, progress_step, progress_total_steps, progress_message, is_complete)
+          VALUES (source.job_name, source.request_id, source.started_at, source.finished_at, source.status, source.summary, source.payload_json, NULL, NULL, IF(source.status = 'success', 'completed', 'failed'), TRUE)
+        """
+        runs_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("job_name", "STRING", result.job_name),
+                bigquery.ScalarQueryParameter("request_id", "STRING", result.request_id),
+                bigquery.ScalarQueryParameter("started_at", "STRING", started_at),
+                bigquery.ScalarQueryParameter("finished_at", "STRING", finished_at),
+                bigquery.ScalarQueryParameter("status", "STRING", result.status),
+                bigquery.ScalarQueryParameter("summary", "STRING", result.summary),
+                bigquery.ScalarQueryParameter("payload_json", "STRING", payload_json),
+            ]
+        )
+        self.client.query(runs_sql, job_config=runs_config).result()
+
         table = self.table_ref(self.settings.datasets.ops, "job_status")
         sql = f"""
         MERGE `{table}` AS target
@@ -437,16 +645,28 @@ class BigQueryService:
             last_error_at = IF(source.status = 'error', source.finished_at, target.last_error_at),
             stale_after_minutes = {self.settings.job_stale_after_minutes},
             status = IF(source.status = 'success', 'healthy', 'critical'),
-            notes = @summary
+            notes = @summary,
+            active_request_id = NULL,
+            in_progress = FALSE,
+            progress_step = COALESCE(target.progress_total_steps, target.progress_step),
+            progress_total_steps = target.progress_total_steps,
+            progress_message = IF(source.status = 'success', 'completed', 'failed'),
+            progress_updated_at = source.finished_at
         WHEN NOT MATCHED THEN
-          INSERT (job_name, last_success_at, last_error_at, stale_after_minutes, status, notes)
+          INSERT (job_name, last_success_at, last_error_at, stale_after_minutes, status, notes, active_request_id, in_progress, progress_step, progress_total_steps, progress_message, progress_updated_at)
           VALUES (
             source.job_name,
             IF(source.status = 'success', source.finished_at, NULL),
             IF(source.status = 'error', source.finished_at, NULL),
             {self.settings.job_stale_after_minutes},
             IF(source.status = 'success', 'healthy', 'critical'),
-            @summary
+            @summary,
+            NULL,
+            FALSE,
+            NULL,
+            NULL,
+            IF(source.status = 'success', 'completed', 'failed'),
+            source.finished_at
           )
         """
         config = bigquery.QueryJobConfig(

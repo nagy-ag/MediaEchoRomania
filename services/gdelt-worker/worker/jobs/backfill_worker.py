@@ -17,6 +17,10 @@ def _tracker_status(stats: dict[str, int]) -> str:
     return "loaded"
 
 
+def _progress_message(processed_months: int, total_months: int, month_key: str) -> str:
+    return f"processed {processed_months}/{total_months} month windows (latest: {month_key})"
+
+
 def run(
     settings: Settings,
     start_date: str | None = None,
@@ -24,6 +28,7 @@ def run(
     max_months: int | None = None,
 ) -> JobResult:
     started_at = datetime.now(timezone.utc).isoformat()
+    request_id = f"backfill-worker-{uuid4()}"
     warehouse = BigQueryService(settings)
     warehouse.ensure_warehouse()
     masterfile_text = fetch_text(settings.gdelt_masterfile_url)
@@ -31,6 +36,14 @@ def run(
     windows = build_backfill_windows(start_date or settings.backfill_start_date, end_date or settings.backfill_end_date)
     if max_months is not None:
         windows = windows[:max_months]
+    total_months = len(windows)
+    warehouse.record_job_start(
+        job_name="backfill-worker",
+        request_id=request_id,
+        summary="Backfill worker initialized and is preparing monthly windows.",
+        progress_total_steps=total_months,
+        progress_message="initializing",
+    )
 
     total_loaded = 0
     total_rejected = 0
@@ -88,6 +101,13 @@ def run(
         total_errors += mention_stats["errors"] + gkg_stats["errors"] + event_stats["errors"]
         total_duplicates += mention_stats["duplicate_files"] + gkg_stats["duplicate_files"] + event_stats["duplicate_files"]
         months_processed += 1
+        warehouse.update_job_progress(
+            job_name="backfill-worker",
+            request_id=request_id,
+            progress_step=months_processed,
+            progress_total_steps=total_months,
+            progress_message=_progress_message(months_processed, total_months, window.month_key),
+        )
 
     normalizer.run(settings)
     rollup_worker.run(settings)
@@ -99,13 +119,14 @@ def run(
     )
     return JobResult(
         job_name="backfill-worker",
-        request_id=f"backfill-worker-{uuid4()}",
+        request_id=request_id,
         status=status,
         summary=summary,
         business={
             "backfill_start_date": start_date or settings.backfill_start_date,
             "backfill_end_date": end_date or settings.backfill_end_date,
             "months_processed": months_processed,
+            "total_months": total_months,
         },
         performance={
             "rows_loaded": total_loaded,

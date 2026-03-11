@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from worker.jobs.backfill_worker import _tracker_status
+from worker.jobs.backfill_worker import _progress_message, _tracker_status
 from worker.jobs.download_worker import run as run_download_worker
 
 
@@ -9,6 +9,16 @@ class WorkerJobTests(unittest.TestCase):
     def test_tracker_status_marks_errors_as_partial(self) -> None:
         self.assertEqual(_tracker_status({"errors": 0}), "loaded")
         self.assertEqual(_tracker_status({"errors": 1}), "partial")
+
+    def test_progress_message_tracks_month_completion(self) -> None:
+        self.assertEqual(
+            _progress_message(0, 3, "2026-03"),
+            "processed 0/3 month windows (latest: 2026-03)",
+        )
+        self.assertEqual(
+            _progress_message(2, 3, "2026-02"),
+            "processed 2/3 month windows (latest: 2026-02)",
+        )
 
     def test_download_worker_returns_error_status_when_file_errors_exist(self) -> None:
         fake_settings = type(
