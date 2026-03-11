@@ -6,6 +6,7 @@ from typing import Any, Literal
 
 FeedType = Literal["events", "mentions", "gkg"]
 JobStatus = Literal["success", "error"]
+PipelineScope = Literal["live", "backfill"]
 
 
 @dataclass(frozen=True)
@@ -19,6 +20,7 @@ class MasterfileEntry:
 
 @dataclass(frozen=True)
 class DatasetNames:
+    stage: str
     raw: str
     norm: str
     derived: str
@@ -42,6 +44,17 @@ class ParsedFeedBatch:
     checksum: str
     processed_rows: int
     rejected_rows: int
+
+
+@dataclass(frozen=True)
+class StagedFileArtifact:
+    source_file: str
+    feed_type: FeedType
+    published_at: datetime
+    source_checksum: str
+    manifest_url: str
+    gcs_uri: str
+    row_count: int
 
 
 @dataclass

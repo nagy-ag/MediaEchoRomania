@@ -1,6 +1,6 @@
-CREATE SCHEMA IF NOT EXISTS `{{ project_id }}.gdelt_ops`;
+CREATE SCHEMA IF NOT EXISTS `{{ project_id }}.{{ dataset_ops }}`;
 
-CREATE TABLE IF NOT EXISTS `{{ project_id }}.gdelt_ops.job_runs` (
+CREATE TABLE IF NOT EXISTS `{{ project_id }}.{{ dataset_ops }}.job_runs` (
   job_name STRING,
   request_id STRING,
   started_at TIMESTAMP,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `{{ project_id }}.gdelt_ops.job_runs` (
 PARTITION BY DATE(started_at)
 CLUSTER BY job_name, status;
 
-CREATE TABLE IF NOT EXISTS `{{ project_id }}.gdelt_ops.job_status` (
+CREATE TABLE IF NOT EXISTS `{{ project_id }}.{{ dataset_ops }}.job_status` (
   job_name STRING,
   last_success_at TIMESTAMP,
   last_error_at TIMESTAMP,
@@ -32,33 +32,105 @@ CREATE TABLE IF NOT EXISTS `{{ project_id }}.gdelt_ops.job_status` (
 )
 CLUSTER BY job_name, status;
 
-CREATE TABLE IF NOT EXISTS `{{ project_id }}.gdelt_ops.backfill_tracker` (
+CREATE TABLE IF NOT EXISTS `{{ project_id }}.{{ dataset_ops }}.backfill_runs` (
+  run_id STRING,
+  scope STRING,
+  requested_start TIMESTAMP,
+  requested_end TIMESTAMP,
+  status STRING,
+  batch_granularity STRING,
+  months_total INT64,
+  months_completed INT64,
+  files_total INT64,
+  files_completed INT64,
+  rows_loaded INT64,
+  rows_rejected INT64,
+  started_at TIMESTAMP,
+  finished_at TIMESTAMP,
+  summary STRING
+)
+PARTITION BY DATE(started_at)
+CLUSTER BY scope, status;
+
+CREATE TABLE IF NOT EXISTS `{{ project_id }}.{{ dataset_ops }}.backfill_steps` (
+  run_id STRING,
+  step_id STRING,
+  scope STRING,
+  step_kind STRING,
   month_key STRING,
   feed_type STRING,
-  range_start DATE,
-  range_end DATE,
+  range_start TIMESTAMP,
+  range_end TIMESTAMP,
   status STRING,
-  rows_accepted INT64,
+  files_total INT64,
+  files_completed INT64,
+  rows_loaded INT64,
   rows_rejected INT64,
-  discovered_domains INT64,
   started_at TIMESTAMP,
-  completed_at TIMESTAMP
+  finished_at TIMESTAMP,
+  summary STRING
 )
-CLUSTER BY month_key, feed_type;
+PARTITION BY DATE(started_at)
+CLUSTER BY run_id, month_key, feed_type;
 
-CREATE TABLE IF NOT EXISTS `{{ project_id }}.gdelt_ops.freshness_watermarks` (
-  dataset_name STRING,
-  table_name STRING,
-  watermark_value TIMESTAMP,
-  updated_at TIMESTAMP
+CREATE TABLE IF NOT EXISTS `{{ project_id }}.{{ dataset_ops }}.file_manifest` (
+  source_file STRING,
+  feed_type STRING,
+  published_at TIMESTAMP,
+  size_bytes INT64,
+  source_url STRING,
+  source_checksum STRING,
+  staged_uri STRING,
+  stage_status STRING,
+  load_status STRING,
+  scoped_status STRING,
+  row_count INT64,
+  first_seen_at TIMESTAMP,
+  last_seen_at TIMESTAMP,
+  staged_at TIMESTAMP,
+  loaded_at TIMESTAMP,
+  scoped_at TIMESTAMP,
+  last_error_at TIMESTAMP,
+  last_error_message STRING
 )
-CLUSTER BY dataset_name, table_name;
+PARTITION BY DATE(published_at)
+CLUSTER BY feed_type, source_file;
 
-CREATE TABLE IF NOT EXISTS `{{ project_id }}.gdelt_ops.outlet_discovery_queue` (
+CREATE TABLE IF NOT EXISTS `{{ project_id }}.{{ dataset_ops }}.file_manifest_buffer` (
+  source_file STRING,
+  feed_type STRING,
+  published_at TIMESTAMP,
+  size_bytes INT64,
+  source_url STRING,
+  source_checksum STRING,
+  first_seen_at TIMESTAMP,
+  last_seen_at TIMESTAMP
+)
+PARTITION BY DATE(last_seen_at)
+CLUSTER BY feed_type, source_file;
+
+CREATE TABLE IF NOT EXISTS `{{ project_id }}.{{ dataset_ops }}.load_audit` (
+  audit_id STRING,
+  run_id STRING,
+  scope STRING,
+  feed_type STRING,
+  batch_key STRING,
+  uri_count INT64,
+  rows_loaded INT64,
+  rows_rejected INT64,
+  started_at TIMESTAMP,
+  finished_at TIMESTAMP,
+  status STRING,
+  summary STRING
+)
+PARTITION BY DATE(started_at)
+CLUSTER BY feed_type, status;
+
+CREATE TABLE IF NOT EXISTS `{{ project_id }}.{{ dataset_ops }}.domain_review_queue` (
   alias_domain STRING,
   first_seen_at TIMESTAMP,
   last_seen_at TIMESTAMP,
-  sample_source_url STRING,
+  sample_identifier STRING,
   source_file STRING,
   source_count INT64,
   status STRING
@@ -66,13 +138,10 @@ CREATE TABLE IF NOT EXISTS `{{ project_id }}.gdelt_ops.outlet_discovery_queue` (
 PARTITION BY DATE(first_seen_at)
 CLUSTER BY alias_domain, status;
 
-CREATE TABLE IF NOT EXISTS `{{ project_id }}.gdelt_ops.event_universe` (
-  window_key STRING,
-  window_start TIMESTAMP,
-  window_end TIMESTAMP,
-  scope STRING,
-  global_event_id INT64,
-  created_at TIMESTAMP
+CREATE TABLE IF NOT EXISTS `{{ project_id }}.{{ dataset_ops }}.freshness_watermarks` (
+  dataset_name STRING,
+  table_name STRING,
+  watermark_value TIMESTAMP,
+  updated_at TIMESTAMP
 )
-PARTITION BY DATE(window_start)
-CLUSTER BY global_event_id, scope;
+CLUSTER BY dataset_name, table_name;

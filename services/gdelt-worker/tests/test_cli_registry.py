@@ -15,6 +15,9 @@ class CliRegistryTests(unittest.TestCase):
                 "brief-generator",
                 "alert-worker",
                 "backfill-worker",
+                "manifest-sync",
+                "stage-range",
+                "live-range",
             },
         )
 

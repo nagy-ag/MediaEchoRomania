@@ -34,10 +34,23 @@ class BigQueryService:
         return f"{self.settings.gcp_project_id}.{dataset}.{table}"
 
     def _render_template(self, sql: str, extra_replacements: dict[str, str] | None = None) -> str:
-        rendered = sql.replace("{{ project_id }}", self.settings.gcp_project_id)
+        replacements = {
+            "project_id": self.settings.gcp_project_id,
+            "dataset_stage": self.settings.datasets.stage,
+            "dataset_raw": self.settings.datasets.raw,
+            "dataset_norm": self.settings.datasets.norm,
+            "dataset_derived": self.settings.datasets.derived,
+            "dataset_serving": self.settings.datasets.serving,
+            "dataset_ops": self.settings.datasets.ops,
+            "outlet_alias_table": self.settings.outlet_alias_table,
+            "outlet_registry_table": self.settings.outlet_registry_table,
+            "domain_review_table": self.settings.domain_review_table,
+        }
         if extra_replacements:
-            for key, value in extra_replacements.items():
-                rendered = rendered.replace(f"{{{{ {key} }}}}", value)
+            replacements.update(extra_replacements)
+        rendered = sql
+        for key, value in replacements.items():
+            rendered = rendered.replace(f"{{{{ {key} }}}}", value)
         return rendered
 
     def run_sql(self, sql: str) -> None:
@@ -678,3 +691,4 @@ class BigQueryService:
             ]
         )
         self.client.query(sql, job_config=config).result()
+

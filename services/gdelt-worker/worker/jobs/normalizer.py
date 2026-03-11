@@ -3,21 +3,21 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from uuid import uuid4
 
-from worker.bigquery_service import BigQueryService
 from worker.config import Settings
-from worker.queries import normalization_queries
 from worker.models import JobResult
+from worker.pipeline_warehouse import PipelineWarehouse
+
+
+REFRESHED_TABLES = ["mentions_ro", "gkg_ro", "events_ro"]
 
 
 def run(settings: Settings) -> JobResult:
     started_at = datetime.now(timezone.utc).isoformat()
-    warehouse = BigQueryService(settings)
-    warehouse.ensure_warehouse()
-    executed = []
-    for table_name, sql in normalization_queries(settings):
-        warehouse.run_sql(sql)
-        warehouse.update_freshness_watermark(settings.datasets.norm, table_name, datetime.now(timezone.utc).isoformat())
-        executed.append(table_name)
+    warehouse = PipelineWarehouse(settings)
+    warehouse.ensure_pipeline_assets()
+    warehouse.run_script("sp_refresh_norm.sql")
+    for table_name in REFRESHED_TABLES:
+        warehouse.warehouse.update_freshness_watermark(settings.datasets.norm, table_name, datetime.now(timezone.utc).isoformat())
     return JobResult(
         job_name="normalizer",
         request_id=f"normalizer-{uuid4()}",
@@ -26,10 +26,10 @@ def run(settings: Settings) -> JobResult:
         business={
             "source_dataset": settings.datasets.raw,
             "target_dataset": settings.datasets.norm,
-            "tables": executed,
+            "tables": REFRESHED_TABLES,
         },
         performance={
-            "refresh_count": len(executed),
+            "refresh_count": len(REFRESHED_TABLES),
         },
         started_at=started_at,
         finished_at=datetime.now(timezone.utc).isoformat(),

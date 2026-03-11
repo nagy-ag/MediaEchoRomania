@@ -40,6 +40,21 @@ def normalization_queries(settings: Settings) -> list[tuple[str, str]]:
             CREATE OR REPLACE TABLE {table(project, norm, 'mentions_ro')}
             PARTITION BY DATE(mention_time)
             CLUSTER BY global_event_id, outlet_id AS
+            WITH alias_candidates AS (
+              SELECT
+                raw_mentions.*,
+                aliases.outlet_id,
+                ROW_NUMBER() OVER (
+                  PARTITION BY raw_mentions.source_file, raw_mentions.checksum, raw_mentions.global_event_id, raw_mentions.mention_time, raw_mentions.source_url
+                  ORDER BY LENGTH(aliases.alias_domain) DESC
+                ) AS alias_rank
+              FROM {table(project, raw, 'raw_mentions')} raw_mentions
+              JOIN {alias_table} aliases
+                ON raw_mentions.source_domain = aliases.alias_domain
+                OR ENDS_WITH(raw_mentions.source_domain, CONCAT('.', aliases.alias_domain))
+              JOIN {outlet_table} outlets ON aliases.outlet_id = outlets.outlet_id
+              WHERE aliases.review_status = 'approved' AND outlets.status = 'active'
+            )
             SELECT
               CONCAT(source_file, ':', CAST(global_event_id AS STRING), ':', FORMAT_TIMESTAMP('%Y%m%d%H%M%S', mention_time), ':', source_url) AS mention_row_id,
               source_file,
@@ -51,14 +66,12 @@ def normalization_queries(settings: Settings) -> list[tuple[str, str]]:
               mention_type,
               source_name,
               source_domain,
-              aliases.outlet_id,
+              outlet_id,
               source_url,
               confidence,
               mention_doc_tone
-            FROM {table(project, raw, 'raw_mentions')} raw_mentions
-            JOIN {alias_table} aliases ON raw_mentions.source_domain = aliases.alias_domain
-            JOIN {outlet_table} outlets ON aliases.outlet_id = outlets.outlet_id
-            WHERE aliases.review_status = 'approved' AND outlets.status = 'active'
+            FROM alias_candidates
+            WHERE alias_rank = 1
             """,
         ),
         (
@@ -67,6 +80,21 @@ def normalization_queries(settings: Settings) -> list[tuple[str, str]]:
             CREATE OR REPLACE TABLE {table(project, norm, 'gkg_ro')}
             PARTITION BY DATE(date)
             CLUSTER BY outlet_id, source_domain AS
+            WITH alias_candidates AS (
+              SELECT
+                raw_gkg.*,
+                aliases.outlet_id,
+                ROW_NUMBER() OVER (
+                  PARTITION BY raw_gkg.source_file, raw_gkg.checksum, raw_gkg.gkg_record_id
+                  ORDER BY LENGTH(aliases.alias_domain) DESC
+                ) AS alias_rank
+              FROM {table(project, raw, 'raw_gkg')} raw_gkg
+              JOIN {alias_table} aliases
+                ON raw_gkg.source_domain = aliases.alias_domain
+                OR ENDS_WITH(raw_gkg.source_domain, CONCAT('.', aliases.alias_domain))
+              JOIN {outlet_table} outlets ON aliases.outlet_id = outlets.outlet_id
+              WHERE aliases.review_status = 'approved' AND outlets.status = 'active'
+            )
             SELECT
               CONCAT(source_file, ':', gkg_record_id) AS gkg_row_id,
               source_file,
@@ -77,17 +105,15 @@ def normalization_queries(settings: Settings) -> list[tuple[str, str]]:
               date,
               source_common_name,
               source_domain,
-              aliases.outlet_id,
+              outlet_id,
               document_identifier,
               themes,
               persons,
               organizations,
               gcam,
               v2tone
-            FROM {table(project, raw, 'raw_gkg')} raw_gkg
-            JOIN {alias_table} aliases ON raw_gkg.source_domain = aliases.alias_domain
-            JOIN {outlet_table} outlets ON aliases.outlet_id = outlets.outlet_id
-            WHERE aliases.review_status = 'approved' AND outlets.status = 'active'
+            FROM alias_candidates
+            WHERE alias_rank = 1
             """,
         ),
         (

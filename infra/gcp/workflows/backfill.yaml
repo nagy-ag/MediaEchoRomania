@@ -1,0 +1,9 @@
+main:
+  params: [args]
+  steps:
+    - init:
+        assign:
+          - startDate: ${args.start_date}
+          - endDate: ${args.end_date}
+    - runBackfill:
+        return: ${"Run Cloud Run backfill container manually with stage-range or backfill-worker after infrastructure deploy. start=" + startDate + ", end=" + endDate}
